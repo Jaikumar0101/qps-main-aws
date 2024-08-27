@@ -7,6 +7,7 @@ use App\Helpers\Admin\InsuranceClaimHelper;
 use App\Helpers\ClaimHelper;
 use App\Helpers\Role\RoleHelper;
 use App\Helpers\Traits\ClaimListAction;
+use App\Helpers\Traits\ClaimsBulkAction;
 use App\Models\InsuranceClaim;
 use App\Models\InsuranceClaimAnswer;
 use App\Models\InsuranceClaimStatus;
@@ -15,7 +16,6 @@ use App\Models\InsuranceEobDl;
 use App\Models\InsuranceFollowUp;
 use App\Models\InsuranceWorkedBy;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -25,7 +25,8 @@ use Rap2hpoutre\FastExcel\FastExcel;
 class InsuranceClaimManagePage extends Component
 {
     use WithPagination,
-        ClaimListAction;
+        ClaimListAction,
+        ClaimsBulkAction;
 
     protected string $paginationTheme = "bootstrap";
     public array $requestFilter = [];

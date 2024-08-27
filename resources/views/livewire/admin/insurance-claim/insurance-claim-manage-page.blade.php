@@ -137,7 +137,7 @@
                                             {{ $rowSelection?'checked':'' }}
                                         />
                                         <label class="form-check-label" for="flexSwitchDefaultAssign">
-                                            Assign Claim
+                                            Bulk Option
                                         </label>
                                     </div>
                                 </div>
@@ -184,23 +184,72 @@
                 </div>
                 @can('claim::assign')
                     <div class="px-8 py-2 {{ $rowSelection?'':'d-none' }}">
-                        <div class="card-toolbar d-flex gap-3">
-                            <button class="btn btn-sm btn-dark"
-                                    wire:click.prevent="OpenAssignModal"
-                                    wire:loading.attr="disabled"
-                                {{ count($selected)>0?'':'disabled' }}
-                            ><i class="fa fa-users me-1"></i>Assign</button>
-                            <button class="btn btn-sm btn-warning"
-                                    wire:click.prevent="unAssignSelectedClaims"
-                                    wire:loading.attr="disabled"
-                                    wire:confirm="Are you sure you want to continue to unassign ?"
-                                {{ count($selected)>0?'':'disabled' }}
-                            ><i class="fa fa-user-xmark me-1"></i>UnAssign</button>
-                            <button class="btn btn-sm btn-danger"
-                                    wire:click.prevent="resetSelectedRows"
-                                    wire:loading.attr="disabled"
-                                {{ count($selected)>0?'':'disabled' }}
-                            ><i class="fa fa-xmark me-1"></i>Remove Selected</button>
+                        <div class="card-toolbar">
+                            <div class="d-flex justify-content-between gap-3">
+                                <div>
+                                    <div class="d-flex gap-3">
+                                        <button class="btn btn-sm btn-light active">
+                                            {{ count($selected) }} Selected
+                                        </button>
+                                        <button class="btn btn-sm btn-danger btn-outline-danger"
+                                                wire:loading.attr="disabled"
+                                                {{ count($selected)>0?'':'disabled' }}
+                                                x-on:click="
+                                                    Swal.fire({
+                                                          title: 'Are you sure?',
+                                                          text: 'Once deleted, you will not be able to recover this record but you can recover records if moved to trash !',
+                                                          icon: 'warning',
+                                                          showCancelButton: true,
+                                                          showDenyButton: true,
+                                                          confirmButtonText: 'Yes, delete it!',
+                                                          cancelButtonText: 'No',
+                                                          denyButtonText: 'Move to trash',
+                                                          customClass: {
+                                                            confirmButton: 'btn btn-danger',
+                                                            cancelButton: 'btn btn-secondary',
+                                                            denyButton: 'btn btn-info'
+                                                          },
+                                                          buttonsStyling: false,
+                                                        }).then((event) => {
+                                                          if (event.isConfirmed) {
+                                                                $wire.permanentlyRemoveRecords();
+                                                          } else if (event.isDenied) {
+                                                                $wire.moveRecordsToTrashed();
+                                                          } else {}
+                                                        });
+                                                   "
+                                        >
+                                            Delete Records
+                                        </button>
+                                        @if($withTrashed)
+                                            <button class="btn btn-sm btn-success"
+                                                    wire:click.prevent="restoreRecords"
+                                                    wire:loading.attr="disabled"
+                                            >
+                                                <i class="fa fa-history pe-2"></i> Restore
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-dark"
+                                            wire:click.prevent="OpenAssignModal"
+                                            wire:loading.attr="disabled"
+                                        {{ count($selected)>0?'':'disabled' }}
+                                    ><i class="fa fa-users me-1"></i>Assign</button>
+                                    <button class="btn btn-sm btn-warning"
+                                            wire:click.prevent="unAssignSelectedClaims"
+                                            wire:loading.attr="disabled"
+                                            wire:confirm="Are you sure you want to continue to unassign ?"
+                                        {{ count($selected)>0?'':'disabled' }}
+                                    ><i class="fa fa-user-xmark me-1"></i>UnAssign</button>
+                                    <button class="btn btn-sm btn-danger"
+                                            wire:click.prevent="resetSelectedRows"
+                                            wire:loading.attr="disabled"
+                                        {{ count($selected)>0?'':'disabled' }}
+                                    ><i class="fa fa-xmark me-1"></i>Remove Selected</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endcan

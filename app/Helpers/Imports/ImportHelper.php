@@ -200,13 +200,13 @@ class ImportHelper
 
             $customer = Customer::find($item['Client ID']);
 
-//            $claimStatus = InsuranceClaimStatus::where('name','LIKE',$item['Claim Status'])->first();
-//
-//            $eobDl = InsuranceEobDl::where('name','LIKE',$item['EOB DL'])->first();
-//
-//            $team = InsuranceEobDl::where('name','LIKE',$item['Team worked'])->first();
-//
-//            $followUp = InsuranceFollowUp::where('name','LIKE',$item['Follow-Up Status'])->first();
+            $claimStatus = InsuranceClaimStatus::where('name','LIKE',$item['Claim Status'])->first();
+
+            $eobDl = InsuranceEobDl::where('name','LIKE',$item['EOB DL'])->first();
+
+            $team = InsuranceEobDl::where('name','LIKE',$item['Team worked'])->first();
+
+            $followUp = InsuranceFollowUp::where('name','LIKE',$item['Follow-Up Status'])->first();
 
             $data = [
                 'customer_id'=>$customer->id ??null,
@@ -224,17 +224,17 @@ class ImportHelper
                 'days_r'=>$item['DAYS-R'] ??null,
                 'prov_nm'=>$item['Prov Nm'] ??null,
                 'location'=>$item['Location'] ??null,
-//                'claim_status'=>$claimStatus?$claimStatus->id:null,
-//                'status_description'=>$claimStatus?$claimStatus->note:null,
-//                'claim_action'=>$claimStatus?$claimStatus->description:null,
-//                'note'=>$item['Enter Additional Notes here'] ??null,
-//                'cof'=>$item['COF'],
-//                'nxt_flup_dt'=>$this->formatDate($item['NXT FLUP DT']),
-//                'eob_dl'=>$eobDl?$eobDl->id:null,
-//                'team_worked'=>$team?$team->id:null,
-//                'worked_by'=>$item['Worked By'] ??null,
-//                'worked_dt'=>$this->formatDate($item['Worked Dt']),
-//                'follow_up_status'=>$followUp?$followUp->id:null
+                'claim_status'=>$claimStatus?$claimStatus->id:null,
+                'status_description'=>$claimStatus?$claimStatus->note:null,
+                'claim_action'=>$claimStatus?$claimStatus->description:null,
+                'note'=>$item['Enter Additional Notes here'] ??null,
+                'cof'=>$item['COF'],
+                'nxt_flup_dt'=>$this->formatDate($item['NXT FLUP DT']),
+                'eob_dl'=>$eobDl?$eobDl->id:null,
+                'team_worked'=>$team?$team->id:null,
+                'worked_by'=>$item['Worked By'] ??null,
+                'worked_dt'=>$this->formatDate($item['Worked Dt']),
+                'follow_up_status'=>$followUp?$followUp->id:null
             ];
 
             $insuranceClaim = $this->findInsuranceClaim(
@@ -244,11 +244,18 @@ class ImportHelper
 
             if (!$insuranceClaim)
             {
-                $isNewClaim = true;
+//                $isNewClaim = true;
 
                 $insuranceClaim = new InsuranceClaim();
                 $insuranceClaim->fill($data);
                 $insuranceClaim->save();
+
+                $this->createOrUpdateAnswers(
+                    $insuranceClaim,
+                    $item,
+                    $claimStatus,
+                    true
+                );
 
             }
 //            else
@@ -259,13 +266,6 @@ class ImportHelper
 //            }
 
             $this->importedClaimsIds[] = $insuranceClaim->id;
-
-            $this->createOrUpdateAnswers(
-                $insuranceClaim,
-                $item,
-      null,
-                $isNewClaim
-            );
 
             // For Import Record
             (new ImportLogHelper($data,$insuranceClaim,$importHistory,'import',$item))->processLog();

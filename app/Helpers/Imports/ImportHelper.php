@@ -11,6 +11,7 @@ use App\Models\InsuranceClaimAnswer;
 use App\Models\InsuranceClaimStatus;
 use App\Models\InsuranceEobDl;
 use App\Models\InsuranceFollowUp;
+use App\Models\InsuranceWorkedBy;
 use App\Models\User;
 use App\Rules\ClaimClientCheckRule;
 use Carbon\Carbon;
@@ -204,7 +205,7 @@ class ImportHelper
 
             $eobDl = InsuranceEobDl::where('name','LIKE',$item['EOB DL'])->first();
 
-            $team = InsuranceEobDl::where('name','LIKE',$item['Team worked'])->first();
+            $team = InsuranceWorkedBy::where('name','LIKE',$item['Team worked'])->first();
 
             $followUp = InsuranceFollowUp::where('name','LIKE',$item['Follow-Up Status'])->first();
 

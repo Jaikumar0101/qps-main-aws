@@ -317,7 +317,7 @@
                                     <div x-show="rowSelection">
                                         <input type="checkbox"
                                                class="form-check-input cs-checkbox"
-                                               onchange="@this.toggleCurrentPageItems(this.checked)"
+                                               wire:change="toggleCurrentPageItems($event.target.checked)"
                                         />
                                     </div>
                                 </th>
@@ -429,7 +429,7 @@
                                             <input type="checkbox"
                                                    class="form-check-input cs-checkbox"
                                                    wire:key="rowSelection_{{ $item->id }}"
-                                                   onchange="@this.updateSelectionRow('{{ $item->id }}',this.checked)"
+                                                   wire:change="updateSelectionRow('{{ $item->id }}', $event.target.checked)"
                                                    {{ count($selected)>0 && in_array($item->id,$selected)?'checked':'' }}
                                             />
                                         </div>

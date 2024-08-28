@@ -345,4 +345,9 @@ class InsuranceClaimManagePage extends Component
         $this->dispatch('resetFilterMultiChoice',data:[]);
     }
 
+    public function updatedFilter(): void
+    {
+        $this->resetPage();
+    }
+
 }

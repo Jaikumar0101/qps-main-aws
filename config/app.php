@@ -184,7 +184,7 @@ return [
         App\Providers\SettingServiceProvider::class,
 
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        //Intervention\Image\ImageServiceProvider::class,
         Torann\Currency\CurrencyServiceProvider::class,
         Srmklive\PayPal\Providers\PayPalServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -246,7 +246,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Image' => Intervention\Image\Facades\Image::class,
+        //'Image' => Intervention\Image\Facades\Image::class,
         'Currency' => \Torann\Currency\Facades\Currency::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,

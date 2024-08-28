@@ -23,6 +23,7 @@ class AdminAddEditPage extends Component
     public $userRoles = [];
 
     protected array $validationAttributes = [
+        'request.role_id'=>'role',
         'request.salutation'=>'salutation',
         'request.name'=>'name',
         'request.last_name'=>'last_name',
@@ -61,6 +62,7 @@ class AdminAddEditPage extends Component
     public function Submit():void
     {
         $this->validate([
+            'request.role_id'=>'required',
             'request.salutation'=>'max:50',
             'request.name'=>'required|max:255',
             'request.last_name'=>'max:255',
@@ -68,6 +70,7 @@ class AdminAddEditPage extends Component
             'request.phone'=>'numeric|digits:10|nullable',
             'request.password'=>'required|min:4|max:16|confirmed',
         ]);
+        $this->updatedRequestRoleId();
         $this->Create($this->request);
     }
 
@@ -121,6 +124,7 @@ class AdminAddEditPage extends Component
     public function Save():void
     {
         $rules = [
+            'request.role_id'=>'required',
             'request.salutation'=>'max:50',
             'request.name'=>'required|max:255',
             'request.last_name'=>'max:255',
@@ -132,6 +136,8 @@ class AdminAddEditPage extends Component
             $rules['request.password'] = 'required|min:4|max:16|confirmed';
         }
         $this->validate($rules);
+        $this->updatedRequestRoleId();
+
         $this->Update($this->request);
     }
 
@@ -145,7 +151,6 @@ class AdminAddEditPage extends Component
         try
         {
             $data['roles'] = BackendHelper::JsonEncode($data['roles']);
-
 
             User::where('id',$this->user_id)
                 ->update(Arr::only($data,[
@@ -287,10 +292,12 @@ class AdminAddEditPage extends Component
                 {
                     $this->request['user_type'] = "admin";
                 }
-
-                if ($role->name == "Client")
+                elseif ($role->name == "Client")
                 {
                     $this->request['user_type'] = "manager";
+                }
+                else{
+                    $this->request['user_type'] = "sub_admin";
                 }
             }
         }

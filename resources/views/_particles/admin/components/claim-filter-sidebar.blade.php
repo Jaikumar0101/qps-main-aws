@@ -136,7 +136,7 @@
             </div>
             <div class="mb-3">
                 <x-admin.claims.filter-date-range-input wire:model.live="claimFilter.dos"
-                                                        label="Date of Submission (Range)"
+                                                        label="Date Of Service (Range)"
                 />
             </div>
             <div class="mb-3">

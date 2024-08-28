@@ -199,15 +199,15 @@ class ImportHelper
         {
             $isNewClaim = false;
 
-            $customer = Customer::find($item['Client ID']);
+            $customer = Customer::find($item['Client ID'] ??'');
 
-            $claimStatus = InsuranceClaimStatus::where('name','LIKE',$item['Claim Status'])->first();
+            $claimStatus = InsuranceClaimStatus::where('name','LIKE',$item['Claim Status'] ??'')->first();
 
-            $eobDl = InsuranceEobDl::where('name','LIKE',$item['EOB DL'])->first();
+            $eobDl = InsuranceEobDl::where('name','LIKE',$item['EOB DL'] ??'')->first();
 
-            $team = InsuranceWorkedBy::where('name','LIKE',$item['Team worked'])->first();
+            $team = InsuranceWorkedBy::where('name','LIKE',$item['Team worked'] ??'')->first();
 
-            $followUp = InsuranceFollowUp::where('name','LIKE',$item['Follow-Up Status'])->first();
+            $followUp = InsuranceFollowUp::where('name','LIKE',$item['Follow-Up Status'] ??'')->first();
 
             $data = [
                 'customer_id'=>$customer->id ??null,

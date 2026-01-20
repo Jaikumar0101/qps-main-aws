@@ -37,6 +37,11 @@ class ImportClaim extends Model
         return $this->hasMany(ImportClaimHistory::class,'parent_id','id');
     }
 
+    public function revertHistory():HasMany
+    {
+        return $this->hasmany(ImportClaimRevertHistory::class,'import_claim_id','id');
+    }
+
     public function getUploadedTime($format = "Y-m-d H:i:s"):string
     {
         try {

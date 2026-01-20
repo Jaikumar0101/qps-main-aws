@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Other;
 
 use App\Models\ContactMail;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,11 +13,34 @@ class ContactMailPage extends Component
 {
     use WithPagination;
     protected string $paginationTheme = "bootstrap";
+
     public array $requestFilter = [];
     public array $filter = [];
-    public mixed $search,$exportFiles = [];
+
+    public mixed $search;
+
+    public $exportFiles = [];
+
     public string $status = "";
     public array $request = [];
+
+    protected $validationAttributes = [
+        'request.first_name'=>'first name',
+        'request.last_name'=>'last name',
+        'request.email'=>'email',
+        'request.phone'=>'phone',
+        'request.subject'=>'subject',
+        'request.message'=>'message',
+    ];
+
+    protected $rules = [
+        'request.first_name'=>'required|max:255',
+        'request.last_name'=>'max:255',
+        'request.email'=>'max:255',
+        'request.phone'=>'max:255',
+        'request.subject'=>'required|max:500',
+        'request.message'=>'required|max:5000',
+    ];
 
     public function mount()
     {
@@ -66,7 +90,7 @@ class ContactMailPage extends Component
         $this->exportFiles = [];
         ContactMail::orderBy($this->filter['sortBy'],$this->filter['orderBy'])
             ->chunk(10000, function ($history) {
-                $filename = time()."export_contact_mails.xlsx";
+                $filename = time()."export_support.xlsx";
                 $path = storage_path('app/exports/').$filename;
                 (new FastExcel($history->sortByDesc('id')))->headerStyle(config('excel.header_style'))
                     ->export($path, function ($ranking) {
@@ -124,52 +148,82 @@ class ContactMailPage extends Component
         }
     }
 
-    public function updatedSearch()
+    public function updatedSearch():void
     {
         $this->search = trim_search_keyword($this->search);
     }
 
-    public function OpenAddEditModal($id = null, $edit = false):void
+    public function OpenAddEditModal($id = null):void
     {
-        if (isset($id) && $id!=="")
+        if (checkData($id))
         {
             $model = ContactMail::find($id);
             if ($model)
             {
-                $this->EditRequest($model,$edit);
+                $this->EditRequest($model);
                 $this->dispatch('OpenAddEditModal');
             }
         }
+        else
+        {
+            $this->NewRequest();
+            $this->dispatch('OpenAddEditModal');
+        }
     }
 
-    protected function EditRequest($contact , $edit = false)
+    public function save():void
     {
-        if ($edit)
+        $this->validate($this->rules);
+
+        if (Arr::has($this->request,'id'))
         {
-            $this->request = $contact->only([
-                'id',
-                'first_name',
-                'last_name',
-                'email',
-                'phone',
-                'subject',
-                'message',
-                'status',
-            ]);
+            $message = "Updated successfully";
+            $check = ContactMail::find($this->request['id']);
         }
         else
         {
-            $this->request = $contact->only([
-                'id',
-                'first_name',
-                'last_name',
-                'email',
-                'phone',
-                'subject',
-                'message',
-                'status',
-            ]);
+            $message = "Created successfully";
+            $check = new ContactMail();
         }
+
+        $check->fill(Arr::except($this->request,'id'));
+
+        $check->save();
+
+        $this->dispatch('SetMessage',
+            type:'success',
+            message:$message,
+            close:true
+        );
+
+    }
+
+
+    protected function EditRequest($contact): void
+    {
+        $this->request = $contact->only([
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'subject',
+            'message',
+            'status',
+        ]);
+    }
+
+    protected function NewRequest():void
+    {
+        $this->request = [
+            'first_name'=>null,
+            'last_name'=>null,
+            'email'=>null,
+            'phone'=>null,
+            'subject'=>null,
+            'message'=>null,
+            'status'=>0,
+        ];
     }
 
     public function MarkSeen()

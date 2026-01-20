@@ -154,7 +154,7 @@
                             <th class="min-w-125px">Role</th>
                             <th class="min-w-125px">Name</th>
                             <th class="min-w-125px">Email</th>
-                            <th class="min-w-125px">Country</th>
+                            <th class="min-w-125px">Company</th>
                             <th class="min-w-125px">Online</th>
                             <th class="min-w-125px">Status</th>
                             <th class="text-end min-w-100px">Actions</th>
@@ -174,7 +174,7 @@
                                 </td>
                                 <td>{{$item->fullName(true) ??''}}</td>
                                 <td>{{$item->email ??''}}</td>
-                                <td>{{$item->getCountry()->exists()?$item->getCountry->nicename:''}}</td>
+                                <td>{{$item->company ??'' }}</td>
                                 <td>
                                     @if($item->isOnline()) <span class="badge badge-success">Online</span> @else <span class="badge badge-danger">Offline</span> @endif
                                 </td>

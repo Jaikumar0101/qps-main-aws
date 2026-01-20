@@ -2,6 +2,7 @@
     <label class="form-label">{{ $attributes->get('label') ??'' }}</label>
     <input class="form-control @error($attributes->wire('model')->value()) is-invalid @enderror"
            {!! $attributes->merge($attributes->getAttributes()) !!}
+           {{  $disabled ?'disabled':'' }}
     />
     @error($attributes->wire('model')->value())
     <div class="invalid-feedback"> {{$message}} </div>

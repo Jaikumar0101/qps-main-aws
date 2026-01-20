@@ -9,14 +9,16 @@ use Livewire\Component;
 class ClaimViewPage extends Component
 {
     public $claim_id;
-    public InsuranceClaim $insuranceClaim;
+    public ?InsuranceClaim $insuranceClaim;
 
     public User $adminUser;
 
     public function mount()
     {
         $this->adminUser = User::find(auth()->user()->id);
-        $this->insuranceClaim = InsuranceClaim::withTrashed()->where('id',$this->claim_id)->first();
+        $this->insuranceClaim = InsuranceClaim::withTrashed()
+            ->where('id',$this->claim_id)
+            ->first();
 
         if (!checkData($this->insuranceClaim))
         {

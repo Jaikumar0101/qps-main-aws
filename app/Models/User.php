@@ -6,6 +6,7 @@ use App\Helpers\Admin\BackendHelper;
 use App\Helpers\Role\RoleHelper;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -37,6 +38,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'phone',
+        'company',
         'country',
         'state',
         'city',
@@ -75,6 +77,11 @@ class User extends Authenticatable
             self::whereIn('id',$items)->orderByRaw("FIELD(id,$order)")->get();
     }
 
+    public static function displayUserName($user_id = null):string
+    {
+        return self::find($user_id)?->fullName() ??'';
+    }
+
     public function getCountry(): HasOne
     {
         return $this->hasOne(Country::class,'id','country');
@@ -100,6 +107,11 @@ class User extends Authenticatable
     public function isMasterAdmin():bool{ return $this->user_type ==="admin"; }
 
     public function isStaff():bool{ return $this->user_type === "manager"; }
+
+    public function projectAssigned():HasMany
+    {
+        return $this->hasMany(QuickProjectAssign::class,'user_id','id');
+    }
 
     public function getAddressLine(): ?string
     {
@@ -162,10 +174,10 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($roleName == "Manager" && $role != 'settings')
-        {
-            return true;
-        }
+//        if ($roleName == "Manager" && $role != 'settings')
+//        {
+//            return true;
+//        }
 
         if ($this->role()->exists())
         {

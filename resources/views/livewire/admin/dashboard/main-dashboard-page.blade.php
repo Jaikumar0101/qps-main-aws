@@ -140,10 +140,6 @@
 
 @can('charts::access')
 
-@push('scripts')
-    <script src="{{ asset('assets/backend/assets/js/custom/apps/chat/chat.js') }}" data-navigate-once></script>
-@endpush
-
 @script
     <script >
         let element2 = document.getElementById('kt_charts_widget_4_chart');

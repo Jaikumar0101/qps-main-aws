@@ -30,23 +30,23 @@ Route::group([
         'middleware' => 'UserAuthCheck',
     ],function (){
 
-        Route::get('verify-email', 'EmailVerificationPromptController')
-            ->name('verification.notice');
-
-        Route::get('verify-email/{id}/{hash}', 'VerifyEmailController')
-            ->middleware(['signed', 'throttle:6,1'])
-            ->name('verification.verify');
-
-        Route::post('email/verification-notification', 'EmailVerificationNotificationController@store')
-            ->middleware('throttle:6,1')
-            ->name('verification.send');
-
-        Route::get('confirm-password', 'ConfirmablePasswordController@show')
-            ->name('password.confirm');
-
-        Route::post('confirm-password', 'ConfirmablePasswordController@store');
-
-        Route::put('password', 'PasswordController@update')->name('password.update');
+//        Route::get('verify-email', 'EmailVerificationPromptController')
+//            ->name('verification.notice');
+//
+//        Route::get('verify-email/{id}/{hash}', 'VerifyEmailController')
+//            ->middleware(['signed', 'throttle:6,1'])
+//            ->name('verification.verify');
+//
+//        Route::post('email/verification-notification', 'EmailVerificationNotificationController@store')
+//            ->middleware('throttle:6,1')
+//            ->name('verification.send');
+//
+//        Route::get('confirm-password', 'ConfirmablePasswordController@show')
+//            ->name('password.confirm');
+//
+//        Route::post('confirm-password', 'ConfirmablePasswordController@store');
+//
+//        Route::put('password', 'PasswordController@update')->name('password.update');
 
         Route::post('logout', 'LoginController@logout')->name('logout');
     });

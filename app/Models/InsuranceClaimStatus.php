@@ -18,6 +18,10 @@ class InsuranceClaimStatus extends Model
         'status',
     ];
 
+    public static function getName($id = null, $default = null)
+    {
+        return self::find($id)?->name ??$default;
+    }
     public function questions():HasMany
     {
         return $this->hasMany(InsuranceClaimStatusQuestion::class,'status_id','id');

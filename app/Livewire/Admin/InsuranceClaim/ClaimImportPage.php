@@ -4,10 +4,13 @@ namespace App\Livewire\Admin\InsuranceClaim;
 
 use App\Helpers\Admin\BackendHelper;
 use App\Helpers\Imports\ImportHelper;
+use App\Helpers\Imports\ImportRevertHelper;
+use App\Imports\ClaimImport;
 use App\Models\Customer;
 use App\Models\ImportClaim;
 use App\Models\ImportClaimHistory;
 use App\Models\User;
+use Excel;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -18,11 +21,13 @@ class ClaimImportPage extends Component
 
     public $request = [];
     public $importRequest = [];
-    public User $adminUser;
+    public ?User $adminUser;
     public $importHistory;
     public $importErrors = [];
 
     public $staff = true;
+
+    public $importClaimLog;
 
     protected $validationAttributes = [
         'request.name'=>'name',
@@ -43,7 +48,7 @@ class ClaimImportPage extends Component
     public function mount():void
     {
         $this->adminUser = auth()->user();
-        $this->staff = $this->adminUser->isStaff();
+        $this->staff = $this->adminUser?->isStaff();
         $this->NewRequest();
 
         $this->clients = Customer::where('status',1)->orderBy('first_name','asc')->get();
@@ -69,7 +74,7 @@ class ClaimImportPage extends Component
             ->paginate(10);
     }
 
-    public function SaveImportHistory()
+    public function SaveImportHistory(): void
     {
         $this->validate($this->rules);
         try
@@ -104,12 +109,12 @@ class ClaimImportPage extends Component
 
     public function OpenImportModal($id = null):void
     {
-        $check = ImportClaim::find($id);
-        if ($check)
+        $this->importClaimLog = ImportClaim::find($id);
+        if ($this->importClaimLog)
         {
-            if ($check->history()->exists())
+            if ($this->importClaimLog->history()->exists())
             {
-                $this->importHistory = $check->history()->latest()->first();
+                $this->importHistory = $this->importClaimLog->history()->latest()->first();
                 $this->importErrors = BackendHelper::JsonDecode($this->importHistory->errors);
             }
             else
@@ -137,22 +142,32 @@ class ClaimImportPage extends Component
         $check = ImportClaim::find($id);
         if ($check)
         {
-            $importHelper = new ImportHelper($check);
-            $results = $importHelper->ImportLeads();
-            if ($results['success'])
-            {
-                $this->dispatch('SetMessage',
-                    type:'success',
-                    message:'Imported successfully',
+
+            // $importHelper = new ImportHelper($check);
+            // $results = $importHelper->ImportLeads();
+
+            $importer = new ClaimImport($check);
+            Excel::import($importer, $check->getFilePath());
+
+            $this->dispatch('SetMessage',
+                    type: 'success',
+                    message: 'Imported successfully',
                 );
-            }
-            else
-            {
-                $this->dispatch('SetMessage',
-                    type:'error',
-                    message:$results['message'],
-                );
-            }
+
+            // if ($results['success'])
+            // {
+            //     $this->dispatch('SetMessage',
+            //         type:'success',
+            //         message:'Imported successfully',
+            //     );
+            // }
+            // else
+            // {
+            //     $this->dispatch('SetMessage',
+            //         type:'error',
+            //         message:$results['message'],
+            //     );
+            // }
         }
     }
 
@@ -169,5 +184,25 @@ class ClaimImportPage extends Component
         }
     }
 
+    public function revertBackImport($id = null)
+    {
+        $check = ImportClaim::find($id);
+
+        if($check)
+        {
+            $importRevertHelper = new ImportRevertHelper($check);
+            $result = $importRevertHelper->revert();
+
+            if ($result['success'])
+            {
+                $this->dispatch('SetMessage',type:'success',message:'Reverted successfully');
+            }
+            else
+            {
+                $this->dispatch('SetMessage',type:'error',message:$result['message']);
+            }
+
+        }
+    }
 
 }

@@ -65,4 +65,44 @@ trait ClaimsBulkAction
             );
         }
     }
+
+    public function moveLeadToArchive($id = null):void
+    {
+        if (checkData($id))
+        {
+            $claim = InsuranceClaim::find($id);
+            if ($claim)
+            {
+                $claim->delete();
+                $this->dispatch('SetMessage',
+                    type:'success',
+                    message:'Moved to archived'
+                );
+            }
+        }
+    }
+
+    public function recoverArchiveLead($id = null):void
+    {
+        if (checkData($id))
+        {
+            $claim = InsuranceClaim::withTrashed()->find($id);
+            if ($claim)
+            {
+                $claim->restore();
+                $this->dispatch('SetMessage',
+                    type:'success',
+                    message:'Recovered Successfully'
+                );
+            }
+        }
+    }
+
+    public function openBulkFieldUpdateModal():void
+    {
+        if (count($this->selected)>0)
+        {
+            $this->dispatch('openBulkFieldUpdateModal',selected:$this->selected);
+        }
+    }
 }

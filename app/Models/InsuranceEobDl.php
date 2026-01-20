@@ -14,4 +14,9 @@ class InsuranceEobDl extends Model
         'position',
         'status'
     ];
+
+    public static function getName($id = null, $default = null)
+    {
+        return self::find($id)?->name ??$default;
+    }
 }

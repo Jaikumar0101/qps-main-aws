@@ -53,7 +53,7 @@ class CustomersAddEditPage extends Component
         $this->create($this->request);
     }
 
-    protected function create($data = [])
+    private function create($data = [])
     {
         try
         {
@@ -73,13 +73,13 @@ class CustomersAddEditPage extends Component
         }
     }
 
-    public function Save($data = [])
+    public function Save()
     {
         $this->validate($this->rules);
-        $this->update($data);
+        $this->update($this->request);
     }
 
-    protected function update($data = [])
+    private function update($data = [])
     {
         try
         {

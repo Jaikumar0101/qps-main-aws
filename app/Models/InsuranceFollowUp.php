@@ -15,4 +15,8 @@ class InsuranceFollowUp extends Model
         'status'
     ];
 
+    public static function getName($id = null, $default = null)
+    {
+        return self::find($id)?->name ??$default;
+    }
 }

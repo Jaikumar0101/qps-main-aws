@@ -97,7 +97,7 @@ if (! function_exists('trim_search_keyword')) {
 
 if (! function_exists('get_time_by_format')) {
 
-    function get_time_by_format($time = null, $format = "d M, Y g:i A"): string
+    function get_time_by_format($time = null, $format = "m/d/Y g:i A"): string
     {
         try {
             return Carbon::parse($time)->format($format);
@@ -111,7 +111,7 @@ if (! function_exists('get_time_by_format')) {
 
 if (! function_exists('get_date_by_format')) {
 
-    function get_date_by_format($time = null, $format = "d/m/Y"): string
+    function get_date_by_format($time = null, $format = "m/d/Y"): string
     {
         try {
             return Carbon::createFromDate($time)->format($format);
@@ -120,6 +120,22 @@ if (! function_exists('get_date_by_format')) {
         {
             return "";
         }
+    }
+}
+
+if (! function_exists('display_date_format')) {
+
+    function display_date_format($time = null, $format = "m/d/Y", $fromFormat = "Y-m-d"): ?string
+    {
+        try
+        {
+            if (checkData($time))
+            {
+                return Carbon::createFromFormat($fromFormat,$time)->format($format);
+            }
+        }
+        catch (\Exception $exception) { }
+        return null;
     }
 }
 
@@ -256,7 +272,7 @@ if (!function_exists('excel_trim')) {
     function excel_trim($item): ?string
     {
         try {
-            return isset($item) && $item!="" && checkData($item)?trim($item):null;
+            return checkData($item)?trim($item):null;
         }
         catch (\Exception $exception){ return null; }
     }

@@ -8,6 +8,8 @@ use App\Helpers\ClaimHelper;
 use App\Helpers\Role\RoleHelper;
 use App\Helpers\Traits\ClaimListAction;
 use App\Helpers\Traits\ClaimsBulkAction;
+use App\Helpers\Traits\WithClaimFilter;
+use App\Helpers\Traits\WithClaimNotes;
 use App\Models\InsuranceClaim;
 use App\Models\InsuranceClaimAnswer;
 use App\Models\InsuranceClaimStatus;
@@ -26,7 +28,9 @@ class InsuranceClaimManagePage extends Component
 {
     use WithPagination,
         ClaimListAction,
-        ClaimsBulkAction;
+        ClaimsBulkAction,
+        WithClaimFilter,
+        WithClaimNotes;
 
     protected string $paginationTheme = "bootstrap";
     public array $requestFilter = [];
@@ -56,10 +60,17 @@ class InsuranceClaimManagePage extends Component
 
     public $withTrashed = false;
 
+    public function boot()
+    {
+        $this->bootMyTrait();
+    }
+
     public function mount()
     {
 
         $this->selectedCustomers = AdminHelper::retrieveListPageFilter();
+
+//        dd($this->selectedCustomers);
 
         $this->adminUser = User::find(auth()->user()->id);
 
@@ -84,7 +95,7 @@ class InsuranceClaimManagePage extends Component
     {
         $insuranceClaimHelper = new InsuranceClaimHelper(
             $this->adminUser,
-            $this->claimFilter,
+            $this->customFilter,
             $this->withTrashed,
             $this->filter,
             $this->search,
@@ -93,7 +104,7 @@ class InsuranceClaimManagePage extends Component
             $this->selectedStatus,
         );
 
-        $data = $insuranceClaimHelper->getClaims();
+        $data = $insuranceClaimHelper->getClaimsWithFilter();
 
         $this->totalOfClaims = $insuranceClaimHelper->totalOfClaims;
 
@@ -154,7 +165,7 @@ class InsuranceClaimManagePage extends Component
         }
     }
 
-    public function updatedSearch()
+    public function updatedSearch():void
     {
         $this->resetPage();
     }
@@ -174,7 +185,8 @@ class InsuranceClaimManagePage extends Component
 
     public function openRowSection($id = null): void
     {
-        if ($this->withTrashed){
+        if ($this->withTrashed)
+        {
             $this->editModal = InsuranceClaim::withTrashed()->where('id',$id)->first();
         }
         else
@@ -192,10 +204,13 @@ class InsuranceClaimManagePage extends Component
             }
 
             $this->isRowOpen = $this->editModal->id;
+
+            $this->getClaimNotes($this->editModal->id);
         }
         else
         {
             $this->isRowOpen = null;
+            $this->getClaimNotes();
         }
 
         $this->updateTaskSubject();
@@ -278,6 +293,7 @@ class InsuranceClaimManagePage extends Component
             'nxt_flup_dt',
             'eob_dl',
             'team_worked',
+            'worked_by',
             'worked_dt',
             'follow_up_status',
             'pms_note',
@@ -285,6 +301,7 @@ class InsuranceClaimManagePage extends Component
             'task_subject',
             'task_note',
             'task_reason',
+            'method'
         ]);
 
         $this->editModal->fill($fieldData);
@@ -302,6 +319,8 @@ class InsuranceClaimManagePage extends Component
         {
             $this->saveClaimAnswer($this->editModal,$key,$item);
         }
+
+        $this->saveClaimNotes();
 
         $this->dispatch('SetMessage',type:'success',message:'Saved successfully');
     }

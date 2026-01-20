@@ -111,7 +111,7 @@
                     </div>
                     <div class="card-toolbar">
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
-                            @can('claim::delete')
+                            @can('claim::archived')
                                 <div class="me-3">
                                     <div class="form-check form-switch form-check-custom form-check-solid">
                                         <input class="form-check-input"
@@ -137,7 +137,7 @@
                                             {{ $rowSelection?'checked':'' }}
                                         />
                                         <label class="form-check-label" for="flexSwitchDefaultAssign">
-                                            Bulk Option
+                                            Bulk Action
                                         </label>
                                     </div>
                                 </div>
@@ -170,7 +170,22 @@
                             @endcan
                             <div>
                                 <!--begin::Trigger button-->
-                                <button id="kt_drawer_filter_button" class="btn btn-sm btn-flex btn-secondary fw-bold">
+                                <button class="btn btn-sm btn-flex btn-secondary fw-bold"
+                                        wire:click.prevent="openFilterSidebar"
+                                        wire:loading.attr="disabled"
+                                >
+                                    <div>
+                                        <i class="ki-duotone ki-filter fs-6 text-muted me-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </div>
+                                    <span class="filter-text">Filter</span>
+                                </button>
+                                <!--end::Trigger button-->
+
+                                <!--begin::Trigger button-->
+                                <button id="kt_drawer_filter_button" class="btn btn-sm btn-flex btn-secondary fw-bold d-none">
                                     <i class="ki-duotone ki-filter fs-6 text-muted me-1">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
@@ -191,7 +206,8 @@
                                         <button class="btn btn-sm btn-light active">
                                             {{ count($selected) }} Selected
                                         </button>
-                                        <button class="btn btn-sm btn-danger btn-outline-danger"
+                                        @can('claim::archived')
+                                            <button class="btn btn-sm btn-danger btn-outline-danger"
                                                 wire:loading.attr="disabled"
                                                 {{ count($selected)>0?'':'disabled' }}
                                                 x-on:click="
@@ -210,6 +226,15 @@
                                                             denyButton: 'btn btn-info'
                                                           },
                                                           buttonsStyling: false,
+                                                          allowEnterKey: false,
+                                                          preConfirm: () => {
+                                                          @can('claim::delete')
+                                                                return true
+                                                          @else
+                                                                Swal.showValidationMessage('You do not have permission to delete this record')
+                                                                return false
+                                                          @endcan
+                                                            },
                                                         }).then((event) => {
                                                           if (event.isConfirmed) {
                                                                 $wire.permanentlyRemoveRecords();
@@ -221,14 +246,26 @@
                                         >
                                             Delete Records
                                         </button>
-                                        @if($withTrashed)
-                                            <button class="btn btn-sm btn-success"
-                                                    wire:click.prevent="restoreRecords"
+                                        @endcan
+                                        @can('claim::update')
+                                            <button class="btn btn-sm btn-outline btn-outline-dark"
+                                                    wire:click.prevent="openBulkFieldUpdateModal"
                                                     wire:loading.attr="disabled"
+                                                   {{ count($selected)>0?'':'disabled' }}
                                             >
-                                                <i class="fa fa-history pe-2"></i> Restore
+                                                Bulk Update
                                             </button>
-                                        @endif
+                                        @endcan
+                                        @can('claim::restore')
+                                            @if($withTrashed)
+                                                <button class="btn btn-sm btn-success"
+                                                        wire:click.prevent="restoreRecords"
+                                                        wire:loading.attr="disabled"
+                                                >
+                                                    <i class="fa fa-history pe-2"></i> Restore
+                                                </button>
+                                            @endif
+                                        @endcan
                                     </div>
                                 </div>
                                 <div>
@@ -429,8 +466,8 @@
                                             <input type="checkbox"
                                                    class="form-check-input cs-checkbox"
                                                    wire:key="rowSelection_{{ $item->id }}"
-                                                   wire:change="updateSelectionRow('{{ $item->id }}', $event.target.checked)"
-                                                   {{ count($selected)>0 && in_array($item->id,$selected)?'checked':'' }}
+                                                   wire:model="selected"
+                                                   value="{{ $item->id }}"
                                             />
                                         </div>
 
@@ -489,12 +526,12 @@
                                     </td>
                                     <td>
                                         <div x-bind:class="editable?'p-2':''">
-                                            {{$item->dob ??''}}
+                                            {{ display_date_format($item->dob ??null) ??''}}
                                         </div>
                                     </td>
                                     <td>
                                         <div x-bind:class="editable?'p-2':''">
-                                            {{$item->dos ??''}}
+                                            {{ display_date_format($item->dos ??null) ??''}}
                                         </div>
                                     </td>
                                     <td>
@@ -544,6 +581,39 @@
                                                     >
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
+                                                    @if($item->trashed() && Gate::allows('claim::archived'))
+                                                        <a class="btn btn-sm btn-icon btn-success fs-10"
+                                                           href="javascript:void(0)"
+                                                           data-bs-toggle="tooltip"
+                                                           data-bs-original-title="Recover from archived"
+                                                           wire:click.prevent="recoverArchiveLead({{ $item->id }})"
+                                                           wire:loading.attr="disabled"
+                                                           wire:key="recover_btn_{{ $item->id }}"
+                                                        >
+                                                            <span wire:loading.remove wire:target="recoverArchiveLead({{ $item->id }})">
+                                                                <i class="fa fa-history"></i>
+                                                            </span>
+                                                            <span wire:loading wire:target="recoverArchiveLead({{ $item->id }})">
+                                                                <span class="spinner-border spinner-border-sm"></span>
+                                                            </span>
+                                                        </a>
+                                                    @elseif(!$item->trashed() && Gate::allows('claim::restore'))
+                                                        <a class="btn btn-sm btn-icon btn-warning fs-10"
+                                                           href="javascript:void(0)"
+                                                           data-bs-toggle="tooltip"
+                                                           data-bs-original-title="Move to archived"
+                                                           wire:click.prevent="moveLeadToArchive({{ $item->id }})"
+                                                           wire:loading.attr="disabled"
+                                                           wire:key="archived_btn_{{ $item->id }}"
+                                                        >
+                                                        <span wire:loading.remove wire:target="moveLeadToArchive({{ $item->id }})">
+                                                            <i class="bi bi-archive"></i>
+                                                        </span>
+                                                            <span wire:loading wire:target="moveLeadToArchive({{ $item->id }})">
+                                                            <span class="spinner-border spinner-border-sm"></span>
+                                                        </span>
+                                                        </a>
+                                                    @endif
                                                 @endcan
                                             </div>
                                         </td>
@@ -570,6 +640,39 @@
                                                     >
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
+                                                    @if($item->trashed() && Gate::allows('claim::archived'))
+                                                        <a class="btn btn-sm btn-icon btn-success fs-10"
+                                                           href="javascript:void(0)"
+                                                           data-bs-toggle="tooltip"
+                                                           data-bs-original-title="Recover from archived"
+                                                           wire:click.prevent="recoverArchiveLead({{ $item->id }})"
+                                                           wire:loading.attr="disabled"
+                                                           wire:key="recover_btn_{{ $item->id }}"
+                                                        >
+                                                            <span wire:loading.remove wire:target="recoverArchiveLead({{ $item->id }})">
+                                                                <i class="fa fa-history"></i>
+                                                            </span>
+                                                            <span wire:loading wire:target="recoverArchiveLead({{ $item->id }})">
+                                                                <span class="spinner-border spinner-border-sm"></span>
+                                                            </span>
+                                                        </a>
+                                                    @elseif(!$item->trashed() && Gate::allows('claim::restore'))
+                                                        <a class="btn btn-sm btn-icon btn-warning fs-10"
+                                                           href="javascript:void(0)"
+                                                           data-bs-toggle="tooltip"
+                                                           data-bs-original-title="Move to archived"
+                                                           wire:click.prevent="moveLeadToArchive({{ $item->id }})"
+                                                           wire:loading.attr="disabled"
+                                                           wire:key="archived_btn_{{ $item->id }}"
+                                                        >
+                                                        <span wire:loading.remove wire:target="moveLeadToArchive({{ $item->id }})">
+                                                            <i class="bi bi-archive"></i>
+                                                        </span>
+                                                            <span wire:loading wire:target="moveLeadToArchive({{ $item->id }})">
+                                                            <span class="spinner-border spinner-border-sm"></span>
+                                                        </span>
+                                                        </a>
+                                                    @endif
                                                 @endcan
                                             </div>
                                         </td>
@@ -586,7 +689,7 @@
                                         Sent on:
                                     </th>
                                     <td>
-                                        {{$item->sent ??''}}
+                                        {{ display_date_format($item->sent ??null) ??''}}
                                     </td>
                                     <th>No of Days:</th>
                                     <td>
@@ -697,11 +800,55 @@
                                              x-bind:class="editable?'p-2':''"
                                         >
                                             {{$item->note ??''}}
+                                            @foreach($item->userNotes as $noteItem)
+                                                <br>{{ $noteItem->note ??'' }}&nbsp;&nbsp; ( {{ $noteItem->user?->fullName() ??'--' }}  {{ get_date_by_format($noteItem->created_at,'m/d/Y - H:i') }} )
+                                            @endforeach
                                         </div>
-                                        <div x-show="editable">
+                                        <div x-show="editable" class="mb-2">
                                             <textarea class="fs-8 w-100 h-100"
                                                       x-model="model.note"
                                             ></textarea>
+                                            @if($editModal && $editModal->id == $item->id)
+                                                @foreach($notes as $nIndex=>$noteItem)
+                                                    <div class="row my-2 gy-2 gx-2">
+                                                        @if(Arr::has($noteItem,'id'))
+                                                            <div class="col-7">
+                                                                {{ \App\Models\User::displayUserName($noteItem['user_id']) }}
+                                                            </div>
+                                                            <div class="col-5">
+                                                                {{ get_date_by_format($noteItem['created_at'] ??null,'m/d/Y - H:i') }}
+                                                            </div>
+                                                        @else
+                                                            <div class="col-7">
+                                                                {{ $adminUser->fullName() }}
+                                                            </div>
+                                                            <div class="col-5">
+                                                                --
+                                                            </div>
+                                                        @endif
+                                                        <div class="col-10">
+                                                        <textarea class="fs-8 w-100 h-100"
+                                                                  wire:model="notes.{{ $nIndex }}.note"
+                                                        ></textarea>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <x-admin.theme.button icon="fa fa-trash"
+                                                                                  color="danger"
+                                                                                  class="btn-icon btn-sm rounded-pill"
+                                                                                  wire:click.prevent="removeClaimNote({{ $nIndex }})"
+                                                                                  wire:loading.attr="disabled"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                            <x-admin.theme.button label="Add"
+                                                                  icon="fa fa-add"
+                                                                  color="success"
+                                                                  class="btn-sm p-0 px-2 py-1"
+                                                                  wire:click.prevent="addNewClaimNote"
+                                                                  wire:loading.attr="disabled"
+                                            />
                                         </div>
                                     </td>
                                     <th>
@@ -727,7 +874,7 @@
                                     <th>
                                         PMS Note:
                                     </th>
-                                    <td colspan="3">
+                                    <td>
                                         <div x-show="!editable"
                                              x-bind:class="editable?'p-2':''"
                                         >
@@ -740,6 +887,26 @@
                                                 <option value="">Select</option>
                                                 <option value="Yes">Yes</option>
                                                 <option value="No">No</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <th>
+                                        Method:
+                                    </th>
+                                    <td>
+                                        <div x-show="!editable"
+                                             x-bind:class="editable?'p-2':''"
+                                        >
+                                            {{ ucfirst($item->method ??'') }}
+                                        </div>
+                                        <div x-show="editable">
+                                            <select class="fs-8"
+                                                    x-model="model.method"
+                                            >
+                                                <option value="">Select</option>
+                                                <option value="call">Call</option>
+                                                <option value="portal">Portal</option>
+                                                <option value="both">Both</option>
                                             </select>
                                         </div>
                                     </td>
@@ -778,7 +945,7 @@
                                         <div x-show="!editable"
                                              x-bind:class="editable?'p-2':''"
                                         >
-                                            {{$item->nxt_flup_dt ??''}}
+                                            {{ display_date_format($item->nxt_flup_dt ??null) ??''}}
                                         </div>
                                         <div x-show="editable">
                                             <input type="date"
@@ -830,7 +997,8 @@
                                         <div x-show="!editable"
                                              x-bind:class="editable?'p-2':''"
                                         >
-                                            {{$item->worked_dt ??''}}
+
+                                            {{ display_date_format($item->worked_dt ??null) ??''}}
                                         </div>
                                         <div x-show="editable">
                                             <input type="date"
@@ -953,12 +1121,13 @@
 
     @include('admin.modals.export_modal')
 
-
-    @include('_particles.admin.components.claim-filter-sidebar')
-
-
+    <livewire:admin.components.claim-filter-sidebar  :filter="$filter"
+                                                     :other-filters="$customFilter"
+                                                     parent-render-method="parentRenderMethod"
+    />
     <livewire:admin.components.claim-assign-modal parent-render-method="parentRenderMethod" />
     <livewire:admin.components.claim-team-modal parent-render-method="parentRenderMethod" />
+    <livewire:admin.components.claim-bulk-update-modal parent-render-method="parentRenderMethod" />
 
 </div>
 
@@ -971,7 +1140,6 @@
     })
 </script>
 @endscript
-
 
 @assets
 <style>

@@ -61,6 +61,12 @@
         .ms-choice .placeholder {
             background-color: transparent;
         }
+        .custom-link-hover{
+            color: #333333;
+        }
+        .custom-link-hover:hover{
+            color: var(--bg-site-blue);
+        }
     </style>
 
 </head>
@@ -114,11 +120,14 @@
 </div>
 <!--end::App-->
 
+<livewire:admin.components.notes.additional-notes-model />
 
 
 {{--@persist('modal')--}}
 {{--    <livewire:admin.modal.video-play-modal />--}}
 {{--@endpersist--}}
+
+@livewireScripts
 
 <!--begin::Javascript-->
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -128,7 +137,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js" data-navigate-once></script>
 
-@livewireScripts
+<script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v1.x.x/dist/livewire-sortable.js" data-navigate-once></script>
+
 
 @yield('footer')
 
@@ -252,6 +262,8 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js" data-navigate-once></script>
 
+<script src="{{ asset('assets/backend/assets/js/custom/apps/chat/chat.js') }}" data-navigate-once></script>
+
 <!--For Select2 Ends-->
 @stack('scripts')
 
@@ -274,6 +286,7 @@
         }
     }
 </script>
+
 <script data-navigate-once>
     const site_settings = {
         'name':@json(config('settings.site_name'))
@@ -393,6 +406,10 @@
             $(this).addClass('active');
         })
     });
+    function dispatchEventCall(name = ''){
+        const event = new CustomEvent(name);
+        window.dispatchEvent(event);
+    }
 </script>
 </body>
 </html>

@@ -10,7 +10,7 @@
                     <div class="card-body">
                         <div class="form-group mb-3">
                             <label class="form-label">Select Customer</label>
-                            <x-forms.select2 wire:model.live="request.customer_id">
+                            <x-forms.select2 wire:model.live="request.customer_id" disabled>
                                 <option value="">Select Option</option>
                                 @foreach($customers as $customer)
                                     <option value="{{ $customer->id }}" {{ $customer->id == $request['customer_id']?'selected':'' }}> {{ $customer->id }} - {{ $customer->last_name ??'' }}</option>
@@ -21,50 +21,59 @@
                               <div class="col-md-4">
                                   <x-input.text wire:model="request.ins_name"
                                                 label="INS Name"
+                                                :disabled="true"
                                   />
                               </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.ins_phone"
                                               label="INS Phone"
+                                                :disabled="true"
                                 />
                             </div>
 
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.sub_id"
                                               label="SUB ID"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.sub_name"
                                               label="SUB Name"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.patent_id"
                                               label="Patent ID"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.patent_name"
                                               label="Patent Name"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-forms.date-picker wire:model="request.dob"
                                                      data-label="DOB"
                                                      data-format="YYYY-MM-DD"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-forms.date-picker wire:model="request.dos"
                                                      data-label="DOS"
                                                      data-format="YYYY-MM-DD"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-forms.date-picker wire:model="request.sent"
                                                      data-label="Sent"
                                                      data-format="YYYY-MM-DD"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
@@ -73,6 +82,7 @@
                                               type="number"
                                               step="any"
                                               min="0"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
@@ -80,6 +90,7 @@
                                               label="Days"
                                               type="number"
                                               min="0"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
@@ -87,16 +98,19 @@
                                               label="Days-R"
                                               type="number"
                                               min="0"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.prov_nm"
                                               label="Prov Nm"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
                                 <x-input.text wire:model="request.location"
                                               label="Location"
+                                                :disabled="true"
                                 />
                             </div>
                             <div class="col-md-4">
@@ -114,7 +128,7 @@
                                 <x-input.text wire:model="request.status_description"
                                               label="Status Description"
                                               readonly
-                                              disabled
+                                              :disabled="true"
                                 />
                             </div>
                             <div class="col-md-12">
@@ -133,7 +147,7 @@
                                 <x-input.text wire:model="request.claim_action"
                                               label="Claim Action"
                                               readonly
-                                              disabled
+                                              :disabled="true"
                                 />
                             </div>
                             <div class="col-md-6">

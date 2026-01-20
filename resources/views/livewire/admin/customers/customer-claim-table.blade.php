@@ -255,12 +255,12 @@
                             </td>
                             <td>
                                 <div x-bind:class="editable?'p-2':''">
-                                    {{$item->dob ??''}}
+                                    {{ display_date_format($item->dob ??null) ??'' }}
                                 </div>
                             </td>
                             <td>
                                 <div x-bind:class="editable?'p-2':''">
-                                    {{$item->dos ??''}}
+                                    {{ display_date_format($item->dos ??null) ??''}}
                                 </div>
                             </td>
                             <td>
@@ -298,7 +298,7 @@
                                 Sent on:
                             </th>
                             <td>
-                                {{$item->sent ??''}}
+                                {{ display_date_format($item->sent ??null) ??''}}
                             </td>
                             <th>No of Days:</th>
                             <td>
@@ -471,7 +471,7 @@
                                 <div x-show="!editable"
                                      x-bind:class="editable?'p-2':''"
                                 >
-                                    {{$item->nxt_flup_dt ??''}}
+                                    {{ display_date_format($item->nxt_flup_dt ??null) ??''}}
                                 </div>
                                 <div x-show="editable">
                                     <input type="date"
@@ -523,7 +523,7 @@
                                 <div x-show="!editable"
                                      x-bind:class="editable?'p-2':''"
                                 >
-                                    {{$item->worked_dt ??''}}
+                                    {{ display_date_format($item->worked_dt ??null) ??''}}
                                 </div>
                                 <div x-show="editable">
                                     <input type="date"

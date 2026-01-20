@@ -36,6 +36,11 @@
                     </div>
                     <div class="card-toolbar">
                         <div class="d-flex align-items-center gap-2 gap-lg-3">
+                            <div class="me-3">
+                                <div wire:loading wire:target="exportClaims">
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                </div>
+                            </div>
                             @can('client::add')
                             <div>
                                 <a href="{{ route('admin::customers:add') }}"
@@ -128,7 +133,7 @@
                                     <td>{{$item->last_name ??''}}</td>
                                     <td>{{$item->email ??''}}</td>
                                     <td>
-                                        {{ $item->getLastMergeDate('d/m/Y') ??'--' }}
+                                        {{ $item->getLastMergeDate('m/d/Y') ??'--' }}
                                     </td>
                                     <td>
                                         @if($item->status) <span class="badge badge-primary">Active</span> @else <span class="badge badge-danger">Inactive</span> @endif
@@ -145,6 +150,21 @@
                                                 >
                                                     <span wire:loading wire:target="exportClaims({{ $item->id }})"><span class="spinner-border spinner-border-sm me-2"></span></span>Export
                                                 </button>
+                                            @endcan
+                                            @can('tasks::access')
+                                                <a class="btn btn-icon btn-sm btn-light-primary"
+                                                   href="{{ route('admin::tasks:project.detail',['client_id'=>$item->id]) }}"
+                                                   wire:navigate
+                                                   data-bs-toggle="tooltip"
+                                                   data-bs-original-title="Tasks"
+                                                >
+                                                    <i class="ki-duotone ki-note-2 fs-2">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                        <span class="path3"></span>
+                                                        <span class="path4"></span>
+                                                    </i>
+                                                </a>
                                             @endcan
                                             @can('client::view')
                                             <a class="btn btn-icon btn-sm btn-dark"

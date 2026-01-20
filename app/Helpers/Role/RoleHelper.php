@@ -62,10 +62,6 @@ class RoleHelper
                 'name'=>'Claims update',
                 'description'=>'Can access for updating lead',
             ],
-            'claim::delete'=>[
-                'name'=>'Claims Delete',
-                'description'=>'Can delete lead',
-            ],
             'claim::grouping'=>[
                 'name'=>'Claims Grouping',
                 'description'=>'Can update claim grouping',
@@ -82,6 +78,18 @@ class RoleHelper
                 'name'=>'Claims Assign',
                 'description'=>'Can Assign claims',
             ],
+            'claim::archived'=>[
+                'name'=>'Claims Archive',
+                'description'=>'Can Archive claims',
+            ],
+            'claim::restore'=>[
+                'name'=>'Claims Restore',
+                'description'=>'Can Restore claims',
+            ],
+            'claim::delete'=>[
+                'name'=>'Claims Delete',
+                'description'=>'Can delete lead',
+            ],
             'charts::access'=>[
                 'name'=>'Charts Access',
                 'description'=>'Can access charts',
@@ -93,6 +101,31 @@ class RoleHelper
             'settings'=>[
                 'name'=>'Settings',
                 'description'=>'Can access website settings',
+            ],
+
+            'tasks::access'=>[
+                'name'=>'Project & Tasks',
+                'description'=>'Can access task & projects'
+            ],
+            'tasks::dashboard'=>[
+                'name'=>'Project Dashboard Tab',
+                'description'=>'Can access task & projects'
+            ],
+            'tasks::settings'=>[
+                'name'=>'Project Settings Tab',
+                'description'=>'Can access task & projects'
+            ],
+            'tasks::people'=>[
+                'name'=>'Project People Tab',
+                'description'=>'Can access task & projects'
+            ],
+            'tasks::message'=>[
+                'name'=>'Project Message Tab',
+                'description'=>'Can access task & projects'
+            ],
+            'tasks::list'=>[
+                'name'=>'Project Task List Tab',
+                'description'=>'Can access task & projects'
             ],
         ];
     }

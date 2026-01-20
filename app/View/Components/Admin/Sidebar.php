@@ -509,4 +509,23 @@ class Sidebar extends Component
             ],
         ];
     }
+
+//    private function tasksSection():array
+//    {
+//        return [
+//            'Tasks'=>[
+//                'name'=>'Project & Tasks',
+//                'url'=>route('admin::tasks:list'),
+//                'active'=>'tasks',
+//                'icon'=>'<i class="ki-duotone ki-note-2 fs-2">
+//                 <span class="path1"></span>
+//                 <span class="path2"></span>
+//                 <span class="path3"></span>
+//                 <span class="path4"></span>
+//                </i>',
+//                'submenu'=>[]
+//            ],
+//        ];
+//    }
+
 }

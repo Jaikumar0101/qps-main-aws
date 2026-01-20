@@ -40,7 +40,7 @@
 
 <body class="font-sans text-gray-900 antialiased dark:bg-gray-900">
 
-@include('_particles.navbar')
+{{--@include('_particles.navbar')--}}
 
 <main>
 
@@ -48,7 +48,7 @@
 
 </main>
 
-@include('_particles.footer')
+{{--@include('_particles.footer')--}}
 
 <x-notifications position="bottom-right" />
 

@@ -217,6 +217,23 @@ Route::group([
 
     });
 
+    /* Tasks Routes */
+    Route::group([
+        'namespace' => 'Tasks',
+        'prefix' => 'customers/tasks',
+        'as'=>'tasks:',
+        'middleware' => ['can:tasks::access']
+    ],function (){
+
+//        Route::get('list','TasksMainPage')
+//            ->name('list');
+
+//        Route::get('category/sort','ProjectCategorySortOrderPage')
+//            ->name('category.sort');
+
+        Route::get('project/{client_id}','ProjectDetailPage')
+            ->name('project.detail');
+    });
 });
 
 

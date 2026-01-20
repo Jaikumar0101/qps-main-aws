@@ -98,7 +98,7 @@
                                 <div class="col-md-4">
                                     <x-input.text type="text"
                                                   label="DOB"
-                                                  value="{{ get_date_by_format($insuranceClaim->dob ??'') }}"
+                                                  value="{{ display_date_format($insuranceClaim->dob ??'') ??'' }}"
                                                   readonly
                                     />
                                 </div>
@@ -106,14 +106,14 @@
                                 <div class="col-md-4">
                                     <x-input.text type="text"
                                                   label="DOS"
-                                                  value="{{ get_date_by_format($insuranceClaim->dos ??'') }}"
+                                                  value="{{ display_date_format($insuranceClaim->dos ??'') ??'' }}"
                                                   readonly
                                     />
                                 </div>
                                 <div class="col-md-4">
                                     <x-input.text type="text"
                                                   label="SENT"
-                                                  value="{{ get_date_by_format($insuranceClaim->sent ??'') }}"
+                                                  value="{{ display_date_format($insuranceClaim->sent ??'') ??'' }}"
                                                   readonly
                                     />
                                 </div>
@@ -202,7 +202,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <x-input.text label="Next/Followup Date"
-                                                  value="{{ get_date_by_format($insuranceClaim->nxt_flup_dt ??'') }}"
+                                                  value="{{ display_date_format($insuranceClaim->nxt_flup_dt ??'') }}"
                                                   readonly
                                     />
                                 </div>
@@ -226,7 +226,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <x-input.text label="Worked Date"
-                                                  value="{{ get_date_by_format($insuranceClaim->worked_dt ??null) }}"
+                                                  value="{{ display_date_format($insuranceClaim->worked_dt ??null) }}"
                                                   readonly
                                     />
                                 </div>

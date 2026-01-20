@@ -81,6 +81,7 @@ trait ClaimListAction
             $temp = array_diff($this->selected, $this->currentPageItems);
             $this->selected = $temp;
         }
+
     }
 
     public function updateTaskSubject(): void

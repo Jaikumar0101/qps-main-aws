@@ -1,7 +1,7 @@
 <div class="w-full"
      wire:ignore
      x-data="{
-        model: @entangle($attributes->wire('model')),
+        model: @entangle($attributes->wire('model')) || [],
         monthSelector:$($refs.multipleSelect),
         updateData:function(data){
             this.monthSelector.multipleSelect('uncheckAll');
@@ -12,22 +12,16 @@
         $(document).ready(function () {
             monthSelector.multipleSelect({
                 placeholder:'{{ $attributes->get('placeholder') ??'Select' }}',
+                filter: true,
+                filterPlaceholder: 'Search',
                 onClose: function(view) {
-                    // Handle the onchange event here
-                    // var selectedMonths = monthSelector.multipleSelect('getSelects');
-                    // Get the selected options
                     let selectedOptions = monthSelector.find(':selected');
-
-                    // Extract values and store in an array
                     let selectedMonths = [];
                     selectedOptions.each(function() {
                         selectedMonths.push($(this).val());
                     });
-
                     model = selectedMonths;
-                    // console.log('Selected Months Changed:', selectedMonths);
                 },
-
             });
 
             monthSelector.multipleSelect('setSelects',model)

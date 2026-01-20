@@ -2,8 +2,8 @@
 <div>
     {!!
         AdminBreadCrumb::Load([
-        'title'=>trans('Contact Mails'),
-        'menu'=>[ ['name'=>trans('Contact'),'url'=>"#"],['name'=>trans('Mails'),'active'=>true] ]
+        'title'=>trans('Support'),
+        'menu'=>[ ['name'=>trans('Support'),'active'=>true] ]
          ])
     !!}
     <!--begin::Content-->
@@ -43,7 +43,7 @@
                             </div>
                             <div>
                                 <button type="button"
-                                        class="btn btn-sm btn-light-primary"
+                                        class="btn btn-sm btn-primary"
                                         wire:click.prevent="exportData"
                                 >
                                     <span wire:loading wire:target="exportData"><span class="spinner-border spinner-border-sm me-2"></span></span>Export
@@ -132,6 +132,15 @@
                                 <!--end::Menu 1-->
                             </div>
                             <!--end::Filter menu-->
+                            <div class="">
+                                <button type="button"
+                                        class="btn btn-sm btn-success"
+                                        wire:click.prevent="OpenAddEditModal"
+                                        wire:loading.attr="disabled"
+                                >
+                                    + Create
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,7 +186,7 @@
                                            wire:dirty.attr="disabled"
                                            wire:target="OpenAddEditModal({{$item->id}})"
                                         >
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-pencil-square"></i>
                                         </a>
                                         <a class="btn btn-sm btn-icon btn-light-danger"
                                            href="javascript:void(0);"
@@ -239,14 +248,14 @@
                 <!--begin::Modal header-->
                 <div class="modal-header">
                     <div>
-                        <h5 class="modal-title" id="exampleModalLabel1">{{Arr::has($request,'id')?'':'New'}} Support Mail</h5>
-                        <p class="small">Here you can edit the details of support mail</p>
+                        <h5 class="modal-title" id="exampleModalLabel1">{{Arr::has($request,'id')?'':'New'}} Support Message</h5>
+                        <p class="small">Here you can edit the details of support</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!--begin::Modal header-->
                 <!--begin::Modal body-->
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                <div class="modal-body">
                     <!--begin:Form-->
                     <form class="form" wire:submit.prevent="save">
                         <div class="row">
@@ -344,7 +353,7 @@
 
                         <!--begin::Actions-->
                         <div class="text-center mt-2">
-                            <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">Close</button>
+                            <button type="reset" class="btn btn-light-dark me-3" data-bs-dismiss="modal">Close</button>
                             @if(Arr::has($request,'status') && $request['status'] == 0)
                                 <button type="button" class="btn btn-primary" wire:click.prevent="MarkSeen" wire:loading.attr="disabled">
                                     <span class="indicator-label" wire:loading.remove wire:target="MarkSeen"> Mark As Seen</span>
@@ -354,7 +363,7 @@
                                 </button>
                             @endif
 
-                            <button type="submit"  class="btn btn-primary d-none">
+                            <button type="submit"  class="btn btn-primary">
                                 <span class="indicator-label" wire:loading.remove wire:target="save">Submit</span>
                                 <span class="indicator-progress" wire:loading wire:target="save">Please wait...
 									<span class="spinner-border spinner-border-sm align-middle ms-2"></span>

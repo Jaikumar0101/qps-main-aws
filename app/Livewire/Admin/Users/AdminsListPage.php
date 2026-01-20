@@ -24,18 +24,17 @@ class AdminsListPage extends Component
         if (isset($this->search) && $this->search!=="")
         {
             $data = User::where('user_type','!=','user')
-                ->where('id','!=',1)
                 ->where(function ($q){
                     $q->orWhere('id','like',$this->search)
                         ->orWhere('name','like',"{$this->search}%")
-                        ->orWhere('name','like',"%{$this->search}%");
+                        ->orWhere('name','like',"%{$this->search}%")
+                        ->orWhere('email','like',"%{$this->search}%");
                 })->orderBy($this->filter['sortBy'],$this->filter['orderBy'])
                 ->paginate($this->filter['perPage']);
         }
         else
         {
             $data = User::where('user_type','!=','user')
-                ->where('id','!=',1)
                 ->orderBy($this->filter['sortBy'],$this->filter['orderBy'])
                 ->paginate($this->filter['perPage']);
         }
@@ -62,8 +61,15 @@ class AdminsListPage extends Component
         $check = User::find($id);
         if ($check)
         {
-            $check->delete();
-            $this->dispatch('SetMessage',type:'success',message:'Deleted Successfully');
+            if ($check->id == auth()->user()->id)
+            {
+                $this->dispatch('SetMessage',type:'error',message:'You not allowed to deleted own account');
+            }
+            else
+            {
+                $check->delete();
+                $this->dispatch('SetMessage',type:'success',message:'Deleted Successfully');
+            }
         }
     }
 

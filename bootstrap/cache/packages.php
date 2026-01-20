@@ -1,13 +1,13 @@
 <?php return array (
   'barryvdh/laravel-debugbar' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    ),
     'aliases' => 
     array (
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
+    ),
+    'providers' => 
+    array (
+      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
     ),
   ),
   'barryvdh/laravel-dompdf' => 
@@ -77,24 +77,24 @@
   ),
   'livewire/livewire' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Livewire\\LivewireServiceProvider',
-    ),
     'aliases' => 
     array (
       'Livewire' => 'Livewire\\Livewire',
     ),
+    'providers' => 
+    array (
+      0 => 'Livewire\\LivewireServiceProvider',
+    ),
   ),
   'maatwebsite/excel' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-    ),
     'aliases' => 
     array (
       'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+    ),
+    'providers' => 
+    array (
+      0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
     ),
   ),
   'matriphe/larinfo' => 
@@ -163,45 +163,45 @@
   ),
   'spatie/laravel-ignition' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    ),
     'aliases' => 
     array (
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
     ),
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
+    ),
   ),
   'srmklive/paypal' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Srmklive\\PayPal\\Providers\\PayPalServiceProvider',
-    ),
     'aliases' => 
     array (
       'PayPal' => 'Srmklive\\PayPal\\Facades\\PayPal',
     ),
+    'providers' => 
+    array (
+      0 => 'Srmklive\\PayPal\\Providers\\PayPalServiceProvider',
+    ),
   ),
   'torann/currency' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Torann\\Currency\\CurrencyServiceProvider',
-    ),
     'aliases' => 
     array (
       'Currency' => 'Torann\\Currency\\Facades\\Currency',
     ),
+    'providers' => 
+    array (
+      0 => 'Torann\\Currency\\CurrencyServiceProvider',
+    ),
   ),
   'unisharp/laravel-filemanager' => 
   array (
+    'aliases' => 
+    array (
+    ),
     'providers' => 
     array (
       0 => 'UniSharp\\LaravelFilemanager\\LaravelFilemanagerServiceProvider',
-    ),
-    'aliases' => 
-    array (
     ),
   ),
   'vinkla/hashids' => 
@@ -228,12 +228,12 @@
   ),
   'wireui/wireui' => 
   array (
+    'aliases' => 
+    array (
+    ),
     'providers' => 
     array (
       0 => 'WireUi\\Providers\\WireUiServiceProvider',
-    ),
-    'aliases' => 
-    array (
     ),
   ),
 );

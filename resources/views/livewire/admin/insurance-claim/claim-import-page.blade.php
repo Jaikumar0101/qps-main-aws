@@ -76,8 +76,22 @@
                                                     <span class="badge badge-warning">Pending</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $item->getUploadedTime('d M, Y - H:i') }}</td>
+                                            <td>{{ $item->getUploadedTime('m/d/Y - H:i') }}</td>
                                             <td class="text-end">
+
+                                                @if($item->status && $item->revertHistory()->where('is_reverted',1)->count() == 0)
+                                                    <button class="btn btn-warning text-dark btn-sm"
+                                                            data-bs-toggle="tooltip"
+                                                            data-bs-title="Revert Records"
+                                                            wire:click.prevent="revertBackImport({{ $item->id }})"
+                                                            wire:loading.attr="disabled"
+                                                            wire:key="revert_btn_{{ $item->id }}"
+                                                    >
+                                                       <span wire:loading wire:target="revertBackImport({{ $item->id }})"><i class="fa fa-spin fa-spinner me-1 text-dark"></i></span>
+                                                       <span wire:loading.remove wire:target="revertBackImport({{ $item->id }})"><i class="fa fa-history me-1 text-dark"></i></span> Revert
+                                                    </button>
+                                                @endif
+
                                                 @if($item->status)
                                                     <button class="btn btn-info btn-sm"
                                                             data-bs-toggle="tooltip"
@@ -156,7 +170,7 @@
 
     </div>
 
-    <div class="modal fade modal-close-out" id="addEditModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabelCloseOut" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade modal-close-out" id="addEditModal" wire:ignore.self>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -170,7 +184,7 @@
                         />
                         <div class="form-group mb-5">
                             <label class="col-form-label">Select Client</label>
-                            <x-forms.select2 wire:model="request.client_id">
+                            <x-forms.select2 wire:model="request.client_id" dropdownParent="#addEditModal">
                                 <option value="">Select option</option>
                                 @foreach($clients as $client)
                                     <option value="{{ $client->id ??'' }}">{{ $client->last_name ??'' }}</option>
@@ -213,47 +227,75 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" >Import Excel Errors</h5>
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                        Import Excel Errors
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="max-height: 450px;overflow-y: scroll">
-                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-4 gy-4 border">
-                        <tr class="fw-bolder text-muted">
-                            <th class="min-w-50px">Row</th>
-                            <th class="min-w-200px">Contact Name</th>
-                            <th class="min-w-200px">Error</th>
-                        </tr>
-                        @forelse($importErrors as $item)
-                            <tr>
-                                <td>{{ $item['row'] ??'' }}</td>
-                                <td class="fs-7">
-                                    {{ $item['name'] ??'' }}
-                                </td>
-                                <td class="fs-7">
-                                    <div class="overflow-y-scroll">
-                                        <div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    @if($importClaimLog)
+                    <ul class="list-group mb-5 rounded-0">
+                        <li class="list-group-item">
+                            Total Records: {{  $importHistory->total??0  }}
+                        </li>
+                        <li class="list-group-item">
+                            Imported Records: {{  $importHistory->imported??0  }}
+                        </li>
+                    </ul>
+                    @endif
+                    <div class="table-responsive">
+                        <table class="table table-row-dashed table-row-gray-300 align-middle gy-4 border">
+                            <thead>
+                                <tr class="fw-bold bg-light">
+                                    <th class="min-w-50px text-center">#Row</th>
+                                    <th class="min-w-200px">Contact Name</th>
+                                    <th>Validation Errors</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($importErrors as $item)
+                                <tr>
+                                    <td class="text-center fw-bold">{{ $item['row'] ??'' }}</td>
+                                    <td>
+                                        <span class="text-dark fw-semibold">{{ $item['name'] ??'--' }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
                                             @foreach($item['errors'] as $errorItem)
                                                 @if(gettype($errorItem) == "array")
                                                     @foreach($errorItem as $subItem)
-                                                        <span>- {{ $subItem ??'' }}</span><br>
+                                                        <div class="d-flex align-items-center text-danger mb-2">
+                                                            <i class="fas fa-times-circle me-2"></i>
+                                                            <span>{{ $subItem }}</span>
+                                                        </div>
                                                     @endforeach
                                                 @else
-                                                    <span>- {{ $errorItem ??'' }}</span><br>
+                                                    <div class="d-flex align-items-center text-danger mb-2">
+                                                        <i class="fas fa-times-circle me-2"></i>
+                                                        <span>{{ $errorItem }}</span>
+                                                    </div>
                                                 @endif
                                             @endforeach
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No errors</td>
-                            </tr>
-                        @endforelse
-                    </table>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center py-4">
+                                        <i class="fas fa-check-circle text-success fs-1 mb-3 d-block"></i>
+                                        <span class="text-muted">No validation errors found</span>
+                                    </td>
+                                </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Close
+                    </button>
                 </div>
             </div>
         </div>

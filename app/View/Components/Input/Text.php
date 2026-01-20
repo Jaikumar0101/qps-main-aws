@@ -6,14 +6,16 @@ use Illuminate\View\Component;
 
 class Text extends Component
 {
+    public bool $disabled;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($disabled = false)
     {
-        //
+        $this->disabled = $disabled;
     }
 
     /**

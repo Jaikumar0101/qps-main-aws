@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Customers;
 
 use App\Models\Customer;
 use App\Models\InsuranceClaim;
+use App\Models\QuickProjectCategory;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,6 @@ class CustomersListPage extends Component
 
     public function mount()
     {
-
         $this->adminUser = User::find(auth()->user()->id);
         $this->resetFilter();
     }
@@ -111,25 +111,29 @@ class CustomersListPage extends Component
                             'Location'=>$ranking->location ??'',
                             'Claim Status'=>$ranking->claimStatusModal?->name ??'',
                             'Status Description'=>$ranking->status_description ??'',
-                            'Q1'=>$ranking->answers?->first()?->question ??'',
-                            'A1'=>$ranking->answers?->first()?->answer ??'',
-                            'Q2'=>$ranking->answers->skip(1)?->first()?->question ??'',
-                            'A2'=>$ranking->answers->skip(1)?->first()?->answer ??'',
-                            'Q3'=>$ranking->answers->skip(2)?->first()?->question ??'',
-                            'A3'=>$ranking->answers->skip(2)?->first()?->answer ??'',
-                            'Q4'=>$ranking->answers->skip(3)?->first()?->question ??'',
-                            'A4'=>$ranking->answers->skip(3)?->first()?->answer ??'',
-                            'Q5'=>$ranking->answers->skip(4)?->first()?->question ??'',
-                            'A5'=>$ranking->answers->skip(4)?->first()?->answer ??'',
+                            'Q1'=>$ranking->answers()->first()?->question ??'',
+                            'A1'=>$ranking->answers()->first()?->answer ??'',
+                            'Q2'=>$ranking->answers()->skip(1)->first()?->question ??'',
+                            'A2'=>$ranking->answers()->skip(1)->first()?->answer ??'',
+                            'Q3'=>$ranking->answers()->skip(2)->first()?->question ??'',
+                            'A3'=>$ranking->answers()->skip(2)->first()?->answer ??'',
+                            'Q4'=>$ranking->answers()->skip(3)->first()?->question ??'',
+                            'A4'=>$ranking->answers()->skip(3)->first()?->answer ??'',
+                            'Q5'=>$ranking->answers()->skip(4)->first()?->question ??'',
+                            'A5'=>$ranking->answers()->skip(4)->first()?->answer ??'',
                             'Enter Additional Notes here'=>$ranking->note ??'',
                             'Claim Action'=>$ranking->claim_action ??'',
                             'COF'=>$ranking->cof ??'',
                             'NXT FLUP DT'=>$ranking->nxt_flup_dt ??'',
                             'EOB DL'=>$ranking->eobDlModal?->name ??'',
-                            'Team Worked'=>$ranking->teamModal?->name ??'',
                             'Worked By'=>$ranking->worked_by ??'',
                             'Worked DT'=>$ranking->worked_dt ??'',
                             'Follow-Up Status'=>$ranking->followUpModal?->name ??'',
+                            'Method'=>$ranking->method ??'',
+                            'Task Subject'=>$ranking->task_subject??'',
+                            'Task Detail'=>$ranking->task_note??'',
+                            'What we need from you/Reason'=>$ranking->task_reason??'',
+                            'Additional Notes'=>$this->getClaimNotes($ranking),
                         ];
                     });
                 $this->exportFiles [] = [
@@ -140,6 +144,30 @@ class CustomersListPage extends Component
                 ];
             });
         $this->dispatch('OpenExportModal');
+    }
+
+    public function getClaimNotes($insuranceClaim)
+    {
+        $notes = $insuranceClaim->note ?? '';
+
+        // Get user notes and format them with line breaks
+        if ($insuranceClaim->userNotes && $insuranceClaim->userNotes->count() > 0) {
+            // Add a line break if there's already content in notes
+            if (!empty(trim($notes))) {
+                $notes .= "\n\n";
+            }
+
+            // Add each user note on a new line
+            foreach ($insuranceClaim->userNotes as $userNote) {
+                if (!empty($userNote->note)) {
+                    $notes .= ($userNote->user?->fullName() ??'--')." ".get_date_by_format($userNote->created_at,'m/d/Y - H:i');
+                    $notes .= "\n";
+                    $notes .= $userNote->note . "\n\n";
+                }
+            }
+        }
+
+        return trim($notes);
     }
 
     public function DownloadFile($index): \Symfony\Component\HttpFoundation\BinaryFileResponse

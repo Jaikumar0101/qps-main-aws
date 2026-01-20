@@ -15,6 +15,10 @@ class InsuranceClaim extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const METHOD_TYPES = [
+        'call','portal','both'
+    ];
+
     protected $fillable = [
         'customer_id',
         'ins_name',
@@ -47,6 +51,7 @@ class InsuranceClaim extends Model
         'task_subject',
         'task_note',
         'task_reason',
+        'method',
     ];
 
     public function code($prefix = "#")
@@ -109,6 +114,12 @@ class InsuranceClaim extends Model
     public function answers():HasMany
     {
        return $this->hasMany(InsuranceClaimAnswer::class,'claim_id','id');
+    }
+
+
+    public function userNotes():HasMany
+    {
+        return $this->hasMany(UserNote::class,'claim_id','id');
     }
 
     public function isClosed(): bool

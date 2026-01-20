@@ -259,6 +259,7 @@ return [
 
         'Role'=>\App\Helpers\Role\RoleHelper::class,
         'ClaimHelper'=>\App\Helpers\ClaimHelper::class,
+        'FilterHelper'=>\App\Helpers\Claims\ClaimFilterHelper::class,
     ],
 
 ];

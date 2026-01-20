@@ -30,9 +30,9 @@ class InsuranceClaimAddEditPage extends Component
     protected function rules()
     {
         return [
-            'request.ins_name'=>'required|max:255',
-            'request.ins_phone'=>'required|max:255',
-            'request.patent_name'=>'required|max:255',
+            'request.ins_name'=>'nullable|max:255',
+            'request.ins_phone'=>'nullable|max:255',
+            'request.patent_name'=>'nullable|max:255',
         ];
     }
 

@@ -106,6 +106,20 @@
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->
+                        <div class="row mb-3">
+                            <label class="col-lg-3 col-form-label text-lg-end">{{trans('Company')}}</label>
+                            <div class="col-lg-9 col-xl-4">
+                                <input type="text"
+                                       wire:model="request.company"
+                                       class="form-control form-check-sm @error('request.company') is-invalid @enderror"
+                                       autocomplete="off"
+                                       placeholder=""
+                                />
+                                @error('request.company') <div class="invalid-feedback">{{$message}}</div> @enderror
+                            </div>
+                        </div>
+                        <!--end::Row-->
+                        <!--begin::Row-->
                         <div class="row mb-3 d-none">
                             <label class="col-lg-3 col-form-label text-lg-end">{{trans('Country')}}</label>
                             <div class="col-lg-9 col-xl-4">

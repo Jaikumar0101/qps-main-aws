@@ -26,7 +26,9 @@
     wire:ignore
 >
     <div class="{{ $attributes->has('data-parent-class')?$attributes->get('data-parent-class'):'form-group mb-3' }}">
-        <label class="{{ $attributes->has('data-label-class')?$attributes->get('data-label-class'):'form-label' }}">{!! $attributes->get('data-label') ??'' !!}</label>
+        @if($attributes->has('data-label'))
+            <label class="{{ $attributes->has('data-label-class')?$attributes->get('data-label-class'):'form-label' }}">{!! $attributes->get('data-label') ??'' !!}</label>
+        @endif
         <input x-ref="datePicker"
                {{ $attributes->merge(['class' => 'form-control ']) }}
                placeholder="{{ $attributes->get('placeholder') }}"

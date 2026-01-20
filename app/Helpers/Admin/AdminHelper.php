@@ -17,7 +17,8 @@ class AdminHelper
 
         if (checkData($selectedClient))
         {
-            return Session::get('claim.filter.selected_client');
+            $check = Session::get('claim.filter.selected_client',[]);     
+            return gettype($check) === 'array'?$check:[];
         }
 
         return [];

@@ -3,9 +3,11 @@
 namespace App\Helpers\Imports;
 
 use App\Helpers\Admin\BackendHelper;
+use App\Imports\ClaimImport;
 use App\Models\Customer;
 use App\Models\ImportClaim;
 use App\Models\ImportClaimHistory;
+use App\Models\ImportClaimRevertHistory;
 use App\Models\InsuranceClaim;
 use App\Models\InsuranceClaimAnswer;
 use App\Models\InsuranceClaimStatus;
@@ -17,7 +19,9 @@ use App\Rules\ClaimClientCheckRule;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -33,9 +37,7 @@ class ImportHelper
 
     public int $total = 0;
 
-    protected array $validationAttributes = [
-
-    ];
+    protected array $validationAttributes = [];
 
     public array $importedClaimsIds = [];
 
@@ -85,9 +87,11 @@ class ImportHelper
     public function ImportLeads():array
     {
 
+
             try
             {
                 $path = $this->importClaim->getFilePath();
+//                Excel::import(new ClaimImport,$path);
                 $collection = (new FastExcel)->import($path);
 
                 $this->total = count($collection);
@@ -140,9 +144,22 @@ class ImportHelper
 
             if (checkData($this->importClaim->client_id))
             {
-                InsuranceClaim::where('customer_id',$this->importClaim->client_id)
+              $data =  InsuranceClaim::where('customer_id',$this->importClaim->client_id)
                     ->whereNotIn('id',$this->importedClaimsIds)
-                    ->delete();
+                    ->get();
+
+              foreach ($data as $item)
+              {
+                  ImportClaimRevertHistory::create([
+                      'import_claim_id'=>$this->importClaim->id,
+                      'claim_id'=>$item->id,
+                      'type'=>ImportClaimRevertHistory::TYPE_TRASH,
+                      'is_reverted'=>0,
+                  ]);
+
+                  $item->delete();
+              }
+
             }
 
             $claimHistory->fill([
@@ -258,13 +275,23 @@ class ImportHelper
                     true
                 );
 
+                ImportClaimRevertHistory::create([
+                    'import_claim_id'=>$this->importClaim->id,
+                    'claim_id'=>$insuranceClaim->id,
+                    'type'=>ImportClaimRevertHistory::TYPE_ADDED,
+                    'is_reverted'=>0,
+                ]);
+
             }
-//            else
-//            {
-//                // For Old Record
-//                (new ImportLogHelper($data,$insuranceClaim,$importHistory,'old'))->processLog();
-//                $insuranceClaim->fill(Arr::except($data,'follow_up_status'));
-//            }
+            else
+            {
+                ImportClaimRevertHistory::create([
+                    'import_claim_id'=>$this->importClaim->id,
+                    'claim_id'=>$insuranceClaim->id,
+                    'type'=>ImportClaimRevertHistory::TYPE_UPDATED,
+                    'is_reverted'=>0,
+                ]);
+            }
 
             $this->importedClaimsIds[] = $insuranceClaim->id;
 
@@ -281,7 +308,7 @@ class ImportHelper
         }
         catch (\Exception $exception)
         {
-            \Log::error($exception->getMessage());
+            Log::error($exception->getMessage());
 
             return [
                 'success'=>false,
@@ -356,7 +383,7 @@ class ImportHelper
 
     }
 
-    public function findInsuranceClaim($customer_id,$data = []):null|InsuranceClaim
+    public function findInsuranceClaim($customer_id, $data = []):null|InsuranceClaim
     {
        if (!$this->user->canAccess('claim::import'))
        {

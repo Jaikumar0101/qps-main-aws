@@ -30,8 +30,7 @@
     <link href="{{ asset('assets/backend/assets/css/custom.css?v=1.1') }}" rel="stylesheet" type="text/css" />
     <!-- Latest compiled and minified CSS -->
     {{-- <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.css" /> --}}
-    <link rel="stylesheet" href="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.css">
-    <script src="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.css" />
 
     @stack('head')
     @livewireStyles
@@ -68,6 +67,22 @@
         }
         .custom-link-hover:hover{
             color: var(--bg-site-blue);
+        }
+
+         .ms-choice {
+            min-height: calc(1.5em + 1.1rem + 2px);
+            font-size: .95rem;
+            border-radius: .425rem;
+        }
+
+        .ms-choice span {
+            line-height: 1.5;
+            padding: .55rem .75rem;
+            cursor: pointer;
+        }
+
+        .ms-drop {
+            width: 100%;
         }
     </style>
 
@@ -263,6 +278,7 @@
 
 <!-- Latest compiled and minified JavaScript -->
 {{-- <script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js" data-navigate-once></script> --}}
+    <script src="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.js" data-navigate-once></script>
 
 <script src="{{ asset('assets/backend/assets/js/custom/apps/chat/chat.js') }}" data-navigate-once></script>
 

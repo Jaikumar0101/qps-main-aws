@@ -43,32 +43,11 @@
     <div class="{{ $attributes->get('class') }}">
         <select class="min-w-150px w-100 p-0"
             x-ref="multipleSelect"
-            multiple>
+            multiple
+        >
             @foreach($options as $option)
                 <option value="{{ $option[$optionValue] ?? '' }}">{{ $option[$optionLabel] ?? '' }}</option>
             @endforeach
         </select>
     </div>
 </div>
-
-@once
-@assets
-<style>
-    .ms-choice {
-        min-height: calc(1.5em + 1.1rem + 2px);
-        font-size: .95rem;
-        border-radius: .425rem;
-    }
-
-    .ms-choice span {
-        line-height: 1.5;
-        padding: .55rem .75rem;
-        cursor: pointer;
-    }
-
-    .ms-drop {
-        width: 100%;
-    }
-</style>
-@endassets
-@endonce

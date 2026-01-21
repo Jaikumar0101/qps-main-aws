@@ -47,6 +47,7 @@ class Kernel extends HttpKernel
             'livewire',
             \App\Http\Middleware\Security\XSSProtection::class,
             \App\Http\Middleware\RestrictionIpHelper::class,
+            \App\Http\Middleware\BaseSetup::class,
         ],
 
         'api' => [

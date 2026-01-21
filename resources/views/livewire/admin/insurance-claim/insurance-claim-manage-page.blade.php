@@ -58,7 +58,7 @@
             <!--end::Page title-->
             <!--begin::Actions-->
             <div class="d-flex align-items-center gap-2 gap-lg-3">
-                {{-- <x-forms.multi-choice-select wire:model.live="selectedCustomers"
+                <x-forms.multi-choice-select wire:model.live="selectedCustomers"
                                              placeholder="Select Client"
                                              class="min-w-250px"
                                              label="Select Client"
@@ -66,15 +66,15 @@
                     @foreach($userCustomers as $item)
                         <option value="{{ $item->id }}">{{ $item->last_name ??'' }}</option>
                     @endforeach
-                </x-forms.multi-choice-select> --}}
-                <x-forms.multi-choice-dropdown wire:model.live="selectedCustomers"
+                </x-forms.multi-choice-select>
+                {{-- <x-forms.multi-choice-dropdown wire:model.live="selectedCustomers"
                          placeholder="Select Client"
                          class="min-w-250px"
                          label="Select Client"
                          :options="$userCustomers"
                          option-label="last_name"
                          option-value="id"
-                />
+                /> --}}
             </div>
             <!--end::Actions-->
         </div>

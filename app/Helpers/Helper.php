@@ -183,10 +183,13 @@ if (!function_exists('check_odd_even')) {
     }
 }
 
-if (!function_exists('generate_timezone_list')) {
+if (! function_exists('generate_timezone_list')) {
     function generate_timezone_list(): array
     {
-        static $regions = array(
+        // Use a fixed UTC time to make offsets consistent
+        $utcNow = new DateTime('now', new DateTimeZone('UTC'));
+
+        $regions = [
             DateTimeZone::AFRICA,
             DateTimeZone::AMERICA,
             DateTimeZone::ANTARCTICA,
@@ -196,38 +199,48 @@ if (!function_exists('generate_timezone_list')) {
             DateTimeZone::EUROPE,
             DateTimeZone::INDIAN,
             DateTimeZone::PACIFIC,
-        );
+        ];
 
-        $timezones = array();
-        foreach( $regions as $region )
-        {
-            $timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( $region ) );
+        // Collect identifiers for the selected regions
+        $timezones = [];
+        foreach ($regions as $region) {
+            $timezones = array_merge(
+                $timezones,
+                DateTimeZone::listIdentifiers($region)
+            );
         }
 
-        $timezone_offsets = array();
-        foreach( $timezones as $timezone )
-        {
+        // Build array with offset + identifier for proper sorting
+        $temp = [];
+        foreach ($timezones as $timezone) {
             $tz = new DateTimeZone($timezone);
-            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+            $temp[] = [
+                'identifier' => $timezone,
+                'offset'     => $tz->getOffset($utcNow),
+            ];
         }
 
-        // sort timezone by offset
-        ksort($timezone_offsets);
+        // Sort by offset, then identifier
+        usort($temp, function ($a, $b) {
+            if ($a['offset'] === $b['offset']) {
+                return strcmp($a['identifier'], $b['identifier']);
+            }
+            return $a['offset'] <=> $b['offset'];
+        });
 
-        $timezone_list = array();
-        foreach( $timezone_offsets as $timezone => $offset )
-        {
-            $offset_prefix = $offset < 0 ? '-' : '+';
-            $offset_formatted = gmdate( 'H:i', abs($offset) );
+        // Build final list: 'Region/City' => '(UTC+05:30) Region/City'
+        $list = [];
+        foreach ($temp as $tz) {
+            $offset = $tz['offset'];
+            $sign   = $offset < 0 ? '-' : '+';
+            $hours  = gmdate('H:i', abs($offset));
+            $pretty = "UTC{$sign}{$hours}";
 
-            $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
-
-            $timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+            $list[$tz['identifier']] = "({$pretty}) {$tz['identifier']}";
         }
 
-        return $timezone_list;
+        return $list;
     }
-
 }
 
 

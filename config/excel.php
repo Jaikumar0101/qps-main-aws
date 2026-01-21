@@ -329,5 +329,5 @@ return [
         */
         'force_resync_remote' => null,
     ],
-    'header_style'=>(new \OpenSpout\Common\Entity\Style\Style())->setFontBold(),
+
 ];

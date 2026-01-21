@@ -35,3 +35,4 @@ class MultiChoiceDropdown extends Component
         return view('components.forms.multi-choice-dropdown');
     }
 }
+

@@ -67,7 +67,7 @@
                         <option value="{{ $item->id }}">{{ $item->last_name ??'' }}</option>
                     @endforeach
                 </x-forms.multi-choice-select> --}}
-                <x-multi-choice-dropdown wire:model.live="selectedCustomers"
+                <x-forms.multi-choice-dropdown wire:model.live="selectedCustomers"
                          placeholder="Select Client"
                          class="min-w-250px"
                          label="Select Client"

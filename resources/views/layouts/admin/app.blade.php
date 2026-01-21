@@ -68,22 +68,6 @@
         .custom-link-hover:hover{
             color: var(--bg-site-blue);
         }
-
-         .ms-choice {
-            min-height: calc(1.5em + 1.1rem + 2px);
-            font-size: .95rem;
-            border-radius: .425rem;
-        }
-
-        .ms-choice span {
-            line-height: 1.5;
-            padding: .55rem .75rem;
-            cursor: pointer;
-        }
-
-        .ms-drop {
-            width: 100%;
-        }
     </style>
 
 </head>

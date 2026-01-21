@@ -33,6 +33,7 @@ class ComponentServiceProvider extends ServiceProvider
         Blade::component('forms.tag',\App\View\Components\Forms\Tag::class);
         Blade::component('forms.select2',\App\View\Components\Forms\Select2::class);
         Blade::component('forms.select2.ajax',\App\View\Components\Forms\Select2Ajax::class);
+        Blade::component('forms.multi-choice-dropdown',\App\View\Components\Forms\MultiChoiceDropdown::class);
 
     }
 }

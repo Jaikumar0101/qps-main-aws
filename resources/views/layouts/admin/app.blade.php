@@ -29,7 +29,9 @@
     <link href="{{ asset('assets/backend/assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/backend/assets/css/custom.css?v=1.1') }}" rel="stylesheet" type="text/css" />
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.css" />
+    {{-- <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.css" /> --}}
+    <link rel="stylesheet" href="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.css">
+    <script src="https://unpkg.com/multiple-select@2.2.0/dist/multiple-select.min.js"></script>
 
     @stack('head')
     @livewireStyles
@@ -260,7 +262,7 @@
 </script>
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js" data-navigate-once></script>
+{{-- <script src="https://unpkg.com/multiple-select@1.7.0/dist/multiple-select.min.js" data-navigate-once></script> --}}
 
 <script src="{{ asset('assets/backend/assets/js/custom/apps/chat/chat.js') }}" data-navigate-once></script>
 

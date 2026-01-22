@@ -9,7 +9,6 @@
         "ext-json": "*",
         "barryvdh/laravel-debugbar": "^3.7",
         "barryvdh/laravel-dompdf": "^2.0",
-        "binafy/laravel-user-monitoring": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "laravel/framework": "^10.0",
@@ -29,7 +28,8 @@
         "torann/currency": "^1.1",
         "unisharp/laravel-filemanager": "^2.5",
         "vinkla/hashids": "^11.0",
-        "weidner/goutte": "^2.3",
+        "symfony/browser-kit": "^6.0",
+        "symfony/http-client": "^6.0",
         "wireui/wireui": "^1.18"
     },
     "require-dev": {

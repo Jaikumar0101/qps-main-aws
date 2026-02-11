@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d14db42ddf685356b1ae3f5e802c2ece",
+    "content-hash": "119d00ec8122d9e8cc470ca1455e2a9e",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -167,82 +167,6 @@
                 }
             ],
             "time": "2024-04-25T13:16:04+00:00"
-        },
-        {
-            "name": "binafy/laravel-user-monitoring",
-            "version": "v1.2.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/binafy/laravel-user-monitoring.git",
-                "reference": "4f57880e4040f36488176aef484b91468f02c54a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/binafy/laravel-user-monitoring/zipball/4f57880e4040f36488176aef484b91468f02c54a",
-                "reference": "4f57880e4040f36488176aef484b91468f02c54a",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": "^9.0|^10.0|^11.0|^12.0",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
-                "pestphp/pest-plugin-laravel": "^1.4.0|^2.0.0|^3.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Binafy\\LaravelUserMonitoring\\Providers\\LaravelUserMonitoringServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Binafy\\LaravelUserMonitoring\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Milwad Khosravi",
-                    "email": "milwad.dev@gmail.com",
-                    "homepage": "https://github.com/milwad-dev",
-                    "role": "author"
-                },
-                {
-                    "name": "Binafy",
-                    "homepage": "https://github.com/binafy",
-                    "role": "owner"
-                }
-            ],
-            "description": "Monitor your user and all activity on your application",
-            "homepage": "https://github.com/binafy/laravel-user-monitoring",
-            "keywords": [
-                "analysis",
-                "binafy",
-                "framework",
-                "laravel",
-                "laravel middleware",
-                "laravel package",
-                "laravel tracking",
-                "laravel user monitoring",
-                "laravel user monitoring package",
-                "laravel-monitoring",
-                "laravel-tracking",
-                "milwad",
-                "monitoring",
-                "tracking"
-            ],
-            "support": {
-                "issues": "https://github.com/binafy/laravel-user-monitoring/issues",
-                "source": "https://github.com/binafy/laravel-user-monitoring/tree/v1.2.5"
-            },
-            "time": "2025-09-10T12:51:30+00:00"
         },
         {
             "name": "brick/math",
@@ -1077,63 +1001,6 @@
             "time": "2025-10-17T16:34:55+00:00"
         },
         {
-            "name": "fabpot/goutte",
-            "version": "v4.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfPHP/Goutte.git",
-                "reference": "e3f28671c87a48a0f13ada1baea0d95acc2138c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/e3f28671c87a48a0f13ada1baea0d95acc2138c3",
-                "reference": "e3f28671c87a48a0f13ada1baea0d95acc2138c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.3",
-                "symfony/browser-kit": "^4.4|^5.0|^6.0",
-                "symfony/css-selector": "^4.4|^5.0|^6.0",
-                "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/dom-crawler": "^4.4|^5.0|^6.0",
-                "symfony/http-client": "^4.4|^5.0|^6.0",
-                "symfony/mime": "^4.4|^5.0|^6.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^6.0"
-            },
-            "type": "application",
-            "autoload": {
-                "psr-4": {
-                    "Goutte\\": "Goutte"
-                },
-                "exclude-from-classmap": [
-                    "Goutte/Tests"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "A simple PHP Web Scraper",
-            "homepage": "https://github.com/FriendsOfPHP/Goutte",
-            "keywords": [
-                "scraper"
-            ],
-            "support": {
-                "issues": "https://github.com/FriendsOfPHP/Goutte/issues",
-                "source": "https://github.com/FriendsOfPHP/Goutte/tree/v4.0.3"
-            },
-            "abandoned": "symfony/browser-kit",
-            "time": "2023-04-01T09:05:33+00:00"
-        },
-        {
             "name": "fruitcake/php-cors",
             "version": "v1.4.0",
             "source": {
@@ -1899,6 +1766,67 @@
                 }
             ],
             "time": "2022-05-21T17:30:32+00:00"
+        },
+        {
+            "name": "jaikumar0101/laravel-repo-facade-builder",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Jaikumar0101/laravel-repo-facade-builder.git",
+                "reference": "2e5fd6d488f2990d9d2141578511d35bb7ad54ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Jaikumar0101/laravel-repo-facade-builder/zipball/2e5fd6d488f2990d9d2141578511d35bb7ad54ab",
+                "reference": "2e5fd6d488f2990d9d2141578511d35bb7ad54ab",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+                "php": "^8.1|^8.2|^8.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^9.0|^10.0|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jaikumar0101\\LaravelRepoFacadeBuilder\\LaravelRepoFacadeBuilderServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jaikumar0101\\LaravelRepoFacadeBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jaikumar0101",
+                    "email": "your-email@example.com"
+                }
+            ],
+            "description": "Laravel package for creating repositories, facades, enums, and other OOP containers using artisan commands",
+            "keywords": [
+                "artisan",
+                "command",
+                "enum",
+                "facade",
+                "laravel",
+                "repository"
+            ],
+            "support": {
+                "issues": "https://github.com/Jaikumar0101/laravel-repo-facade-builder/issues",
+                "source": "https://github.com/Jaikumar0101/laravel-repo-facade-builder/tree/v1.0.1"
+            },
+            "time": "2026-02-06T02:23:20+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2858,16 +2786,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.7.4",
+            "version": "v3.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "5a8dffd4c0ab357ff7ed5b39e7c2453d962a68e0"
+                "reference": "b48b1e5ecb6c4740f49e18b1c2bc14ed33f8ebff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/5a8dffd4c0ab357ff7ed5b39e7c2453d962a68e0",
-                "reference": "5a8dffd4c0ab357ff7ed5b39e7c2453d962a68e0",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/b48b1e5ecb6c4740f49e18b1c2bc14ed33f8ebff",
+                "reference": "b48b1e5ecb6c4740f49e18b1c2bc14ed33f8ebff",
                 "shasum": ""
             },
             "require": {
@@ -2922,7 +2850,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.7.4"
+                "source": "https://github.com/livewire/livewire/tree/v3.7.5"
             },
             "funding": [
                 {
@@ -2930,7 +2858,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-13T09:37:21+00:00"
+            "time": "2026-01-21T08:08:00+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -5833,20 +5761,20 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v6.4.24",
+            "version": "v7.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "9b784413143701aa3c94ac1869a159a9e53e8761"
+                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/9b784413143701aa3c94ac1869a159a9e53e8761",
-                "reference": "9b784413143701aa3c94ac1869a159a9e53e8761",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
+                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1"
+                "php": ">=8.2"
             },
             "type": "library",
             "autoload": {
@@ -5878,7 +5806,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v6.4.24"
+                "source": "https://github.com/symfony/css-selector/tree/v7.4.0"
             },
             "funding": [
                 {
@@ -5898,7 +5826,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-07-10T08:14:14+00:00"
+            "time": "2025-10-30T13:39:42+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -5969,26 +5897,27 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v6.4.25",
+            "version": "v7.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "976302990f9f2a6d4c07206836dd4ca77cae9524"
+                "reference": "0c5e8f20c74c78172a8ee72b125909b505033597"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/976302990f9f2a6d4c07206836dd4ca77cae9524",
-                "reference": "976302990f9f2a6d4c07206836dd4ca77cae9524",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/0c5e8f20c74c78172a8ee72b125909b505033597",
+                "reference": "0c5e8f20c74c78172a8ee72b125909b505033597",
                 "shasum": ""
             },
             "require": {
                 "masterminds/html5": "^2.6",
-                "php": ">=8.1",
+                "php": ">=8.2",
+                "symfony/deprecation-contracts": "^2.5|^3",
                 "symfony/polyfill-ctype": "~1.8",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
-                "symfony/css-selector": "^5.4|^6.0|^7.0"
+                "symfony/css-selector": "^6.4|^7.0|^8.0"
             },
             "type": "library",
             "autoload": {
@@ -6016,7 +5945,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v6.4.25"
+                "source": "https://github.com/symfony/dom-crawler/tree/v7.4.1"
             },
             "funding": [
                 {
@@ -6036,7 +5965,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-05T18:56:08+00:00"
+            "time": "2025-12-06T15:47:47+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -8673,72 +8602,6 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
-        },
-        {
-            "name": "weidner/goutte",
-            "version": "2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dweidner/laravel-goutte.git",
-                "reference": "4b6407b42e6f118657843544d15e167e8f299435"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dweidner/laravel-goutte/zipball/4b6407b42e6f118657843544d15e167e8f299435",
-                "reference": "4b6407b42e6f118657843544d15e167e8f299435",
-                "shasum": ""
-            },
-            "require": {
-                "fabpot/goutte": "^4.0",
-                "illuminate/support": "^8|^9|^10.0",
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^6|^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Weidner\\Goutte\\GoutteServiceProvider"
-                    ],
-                    "aliases": {
-                        "Goutte": "Weidner\\Goutte\\GoutteFacade"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Weidner\\Goutte\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Weidner",
-                    "email": "hallo@danielweidner.de",
-                    "homepage": "https://danielweidner.de"
-                }
-            ],
-            "description": "Laravel Facade for Goutte, a simple PHP Web Scraper",
-            "homepage": "https://github.com/dweidner/laravel-goutte",
-            "keywords": [
-                "goutte",
-                "laravel",
-                "weidner"
-            ],
-            "support": {
-                "issues": "https://github.com/dweidner/laravel-goutte/issues",
-                "source": "https://github.com/dweidner/laravel-goutte/tree/2.3.0"
-            },
-            "abandoned": "symfony/browser-kit",
-            "time": "2023-03-16T08:45:21+00:00"
         },
         {
             "name": "wireui/wireui",

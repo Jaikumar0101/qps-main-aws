@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\InsuranceClaim;
+use App\Observers\InsuranceClaimObserver;
 use Illuminate\Support\ServiceProvider;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
@@ -24,8 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        HeadingRowFormatter::extend('custom', function($value, $key) {
+        HeadingRowFormatter::extend('custom', function ($value, $key) {
             return $value;
         });
+
+        InsuranceClaim::observe(InsuranceClaimObserver::class);
     }
 }

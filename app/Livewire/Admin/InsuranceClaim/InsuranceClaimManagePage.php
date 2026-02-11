@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Admin\InsuranceClaim;
 
+use App\Facades\InsuranceClaimPortal;
 use App\Helpers\Admin\AdminHelper;
 use App\Helpers\Admin\InsuranceClaimHelper;
 use App\Helpers\ClaimHelper;
 use App\Helpers\Role\RoleHelper;
+use App\Helpers\Traits\Base\WithAdminAuthUser;
 use App\Helpers\Traits\ClaimListAction;
 use App\Helpers\Traits\ClaimsBulkAction;
 use App\Helpers\Traits\WithClaimFilter;
@@ -17,7 +19,6 @@ use App\Models\InsuranceClaimTask;
 use App\Models\InsuranceEobDl;
 use App\Models\InsuranceFollowUp;
 use App\Models\InsuranceWorkedBy;
-use App\Models\User;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -27,6 +28,7 @@ use Rap2hpoutre\FastExcel\FastExcel;
 class InsuranceClaimManagePage extends Component
 {
     use WithPagination,
+        WithAdminAuthUser,
         ClaimListAction,
         ClaimsBulkAction,
         WithClaimFilter,
@@ -40,15 +42,13 @@ class InsuranceClaimManagePage extends Component
 
     public $closedStatus = [];
     public $selectedStatus = [];
-    public $followUpList = [],$eobList = [],$teamList = [],$followList = [];
+    public $followUpList = [], $eobList = [], $teamList = [], $followList = [];
 
-    public $selectedClaimStatus = [],$claimStatusList = [],$tasksList = [];
+    public $selectedClaimStatus = [], $claimStatusList = [], $tasksList = [];
 
     public $editFields = false;
     public $editModal;
     public $request = [];
-
-    public User $adminUser;
 
     public $userCustomers = [], $selectedCustomers = [];
 
@@ -60,34 +60,27 @@ class InsuranceClaimManagePage extends Component
 
     public $withTrashed = false;
 
-    public function boot()
-    {
-        $this->bootMyTrait();
-    }
-
     public function mount()
     {
 
+        $this->bootMyTrait();
+        $this->initAdminAuthentication();
+
         $this->selectedCustomers = AdminHelper::retrieveListPageFilter();
 
-//        dd($this->selectedCustomers);
+        $this->closedStatus = InsuranceClaimPortal::claimsTable()->getClosedFollowUpStatus();
+        $this->followUpList = InsuranceFollowUp::where('status', 1)->pluck('id')->toArray();
 
-        $this->adminUser = User::find(auth()->user()->id);
-
-        $this->closedStatus = ClaimHelper::closedFollowUp();
-        $this->followUpList = InsuranceFollowUp::where('status',1)->pluck('id')->toArray();
-
-        $this->claimStatusList = InsuranceClaimStatus::where('status',1)->get();
-        $this->eobList = InsuranceEobDl::where('status',1)->get();
-        $this->teamList = InsuranceWorkedBy::where('status',1)->get();
-        $this->followList = InsuranceFollowUp::where('status',1)->get();
-        $this->tasksList  = InsuranceClaimTask::where('status',1)->get();
+        $this->claimStatusList = InsuranceClaimStatus::where('status', 1)->get();
+        $this->eobList = InsuranceEobDl::where('status', 1)->get();
+        $this->teamList = InsuranceWorkedBy::where('status', 1)->get();
+        $this->followList = InsuranceFollowUp::where('status', 1)->get();
+        $this->tasksList  = InsuranceClaimTask::where('status', 1)->get();
 
         $this->resetFilter();
         $this->resetClaimFilter();
 
         $this->userCustomers = RoleHelper::getUserCustomers($this->adminUser);
-
     }
 
     #[On('parentRenderMethod')]
@@ -110,34 +103,34 @@ class InsuranceClaimManagePage extends Component
 
         $this->currentPageItems = $data->pluck('id')->toArray();
 
-        return view('livewire.admin.insurance-claim.insurance-claim-manage-page',compact('data'));
+        return view('livewire.admin.insurance-claim.insurance-claim-manage-page', compact('data'));
     }
 
-    public function resetFilter():void
+    public function resetFilter(): void
     {
         $this->requestFilter =  $this->filter = [
-            'sortBy'=>'ins_name',
-            'orderBy'=>'asc',
-            'perPage'=>10
+            'sortBy' => 'ins_name',
+            'orderBy' => 'asc',
+            'perPage' => 10
         ];
     }
 
-    public function exportData():void
+    public function exportData(): void
     {
         $this->exportFiles = [];
-        InsuranceClaim::orderBy($this->filter['sortBy'],$this->filter['orderBy'])
+        InsuranceClaim::orderBy($this->filter['sortBy'], $this->filter['orderBy'])
             ->chunk(10000, function ($history) {
-                $filename = time()."export_insurance_claims.xlsx";
-                $path = storage_path('app/exports/').$filename;
+                $filename = time() . "export_insurance_claims.xlsx";
+                $path = storage_path('app/exports/') . $filename;
                 (new FastExcel($history->sortByDesc('id')))->headerStyle(config('excel.header_style'))
                     ->export($path, function ($ranking) {
                         return ClaimHelper::mapClaimExportFiled($ranking);
                     });
-                $this->exportFiles [] = [
-                    'name'=>$filename,
-                    'link'=>'app/exports/'.$filename,
-                    'path'=>$path,
-                    'removed'=>false,
+                $this->exportFiles[] = [
+                    'name' => $filename,
+                    'link' => 'app/exports/' . $filename,
+                    'path' => $path,
+                    'removed' => false,
                 ];
             });
         $this->dispatch('OpenExportModal');
@@ -150,34 +143,30 @@ class InsuranceClaimManagePage extends Component
         return response()->download(storage_path($path))->deleteFileAfterSend();
     }
 
-    public function applyFilter():void
+    public function applyFilter(): void
     {
         $this->filter =  $this->requestFilter;
     }
 
-    public function destroy($id = null):void
+    public function destroy($id = null): void
     {
         $check = InsuranceClaim::find($id);
-        if ($check)
-        {
+        if ($check) {
             $check->delete();
-            $this->dispatch('SetMessage',type:'success',message:'Deleted Successfully');
+            $this->dispatch('SetMessage', type: 'success', message: 'Deleted Successfully');
         }
     }
 
-    public function updatedSearch():void
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
     public function changeSortBy($sortBy = 'id'): void
     {
-        if ($this->filter['sortBy'] == $sortBy)
-        {
-            $this->filter['orderBy'] = $this->filter['orderBy'] == "desc"?'asc':'desc';
-        }
-        else
-        {
+        if ($this->filter['sortBy'] == $sortBy) {
+            $this->filter['orderBy'] = $this->filter['orderBy'] == "desc" ? 'asc' : 'desc';
+        } else {
             $this->filter['sortBy'] = $sortBy;
             $this->filter['orderBy'] = "asc";
         }
@@ -185,30 +174,23 @@ class InsuranceClaimManagePage extends Component
 
     public function openRowSection($id = null): void
     {
-        if ($this->withTrashed)
-        {
-            $this->editModal = InsuranceClaim::withTrashed()->where('id',$id)->first();
-        }
-        else
-        {
+        if ($this->withTrashed) {
+            $this->editModal = InsuranceClaim::withTrashed()->where('id', $id)->first();
+        } else {
             $this->editModal = InsuranceClaim::find($id);
         }
 
-        if ($this->editModal)
-        {
+        if ($this->editModal) {
             $this->request = $this->editModal->toArray();
 
-            foreach ($this->editModal->answers as $i=>$item)
-            {
-                $this->request['a_'.$i+1] = $item['answer'];
+            foreach ($this->editModal->answers as $i => $item) {
+                $this->request['a_' . $i + 1] = $item['answer'];
             }
 
             $this->isRowOpen = $this->editModal->id;
 
             $this->getClaimNotes($this->editModal->id);
-        }
-        else
-        {
+        } else {
             $this->isRowOpen = null;
             $this->getClaimNotes();
         }
@@ -218,73 +200,63 @@ class InsuranceClaimManagePage extends Component
 
     public function claimStatusUpdated(): void
     {
-            if ($this->withTrashed){
-                $model = InsuranceClaim::withTrashed()->where('id',$this->editModal?->id ??null)->first();
-            }
-            else{
-                $model = InsuranceClaim::find($this->editModal?->id ??null);
-            }
+        if ($this->withTrashed) {
+            $model = InsuranceClaim::withTrashed()->where('id', $this->editModal?->id ?? null)->first();
+        } else {
+            $model = InsuranceClaim::find($this->editModal?->id ?? null);
+        }
 
-            if ($model)
-            {
-                $claimStatus = InsuranceClaimStatus::find($this->request['claim_status']);
-                if ($claimStatus)
-                {
-                    $model->claim_status = $this->request['claim_status'];
-                    $model->status_description = $claimStatus->note;
-                    $model->claim_action = $claimStatus->description;
+        if ($model) {
+            $claimStatus = InsuranceClaimStatus::find($this->request['claim_status']);
+            if ($claimStatus) {
+                $model->claim_status = $this->request['claim_status'];
+                $model->status_description = $claimStatus->note;
+                $model->claim_action = $claimStatus->description;
 
-                    $ids = [];
+                $ids = [];
 
-                    foreach ($claimStatus->questions as $item)
-                    {
-                        $check = InsuranceClaimAnswer::where([
-                            'claim_id'=>$model->id,
-                            'question_id'=>$item->id,
-                        ])->first();
+                foreach ($claimStatus->questions as $item) {
+                    $check = InsuranceClaimAnswer::where([
+                        'claim_id' => $model->id,
+                        'question_id' => $item->id,
+                    ])->first();
 
-                        if (!$check)
-                        {
-                            $check = new InsuranceClaimAnswer();
-                        }
-
-                        $check->fill([
-                            'claim_id'=>$model->id,
-                            'question_id'=>$item->id,
-                            'question'=>$item->title ??'',
-                        ]);
-
-                        $check->save();
-
-                        $ids[] = $check->id;
-
+                    if (!$check) {
+                        $check = new InsuranceClaimAnswer();
                     }
 
-                    InsuranceClaimAnswer::where([
-                        'claim_id'=>$model->id,
-                    ])->whereNotIn('id',$ids)->delete();
+                    $check->fill([
+                        'claim_id' => $model->id,
+                        'question_id' => $item->id,
+                        'question' => $item->title ?? '',
+                    ]);
 
-                }
-                $model->save();
+                    $check->save();
 
-                $this->editModal = $model;
-                $this->request = $this->editModal->toArray();
-
-                foreach ($this->editModal->answers as $i=>$item)
-                {
-                    $this->request['a_'.$i+1] = $item['answer'];
+                    $ids[] = $check->id;
                 }
 
+                InsuranceClaimAnswer::where([
+                    'claim_id' => $model->id,
+                ])->whereNotIn('id', $ids)->delete();
             }
+            $model->save();
 
+            $this->editModal = $model;
+            $this->request = $this->editModal->toArray();
+
+            foreach ($this->editModal->answers as $i => $item) {
+                $this->request['a_' . $i + 1] = $item['answer'];
+            }
+        }
     }
 
-    public function saveModalValue($id,$data)
+    public function saveModalValue($id, $data)
     {
 
         $this->isProcessing = false;
 
-        $fieldData = Arr::only($data,[
+        $fieldData = Arr::only($data, [
             'claim_status',
             'status_description',
             'note',
@@ -307,7 +279,7 @@ class InsuranceClaimManagePage extends Component
         $this->editModal->fill($fieldData);
         $this->editModal->save();
 
-        $filedAnswers = Arr::only($data,[
+        $filedAnswers = Arr::only($data, [
             'a_1',
             'a_2',
             'a_3',
@@ -315,58 +287,54 @@ class InsuranceClaimManagePage extends Component
             'a_5',
         ]);
 
-        foreach ($filedAnswers as $key=>$item)
-        {
-            $this->saveClaimAnswer($this->editModal,$key,$item);
+        foreach ($filedAnswers as $key => $item) {
+            $this->saveClaimAnswer($this->editModal, $key, $item);
         }
 
         $this->saveClaimNotes();
 
-        $this->dispatch('SetMessage',type:'success',message:'Saved successfully');
+        $this->dispatch('SetMessage', type: 'success', message: 'Saved successfully');
     }
 
     private function saveClaimAnswer($model, mixed $field, mixed $value): void
     {
 
-        $data = explode('_',$field);
-        $skip = max($data[1] - 1,0);
+        $data = explode('_', $field);
+        $skip = max($data[1] - 1, 0);
 
         $check = $model->answers->skip($skip)?->first();
 
-        if ($check)
-        {
-            InsuranceClaimAnswer::where('id',$check->id)->update([
-                'answer'=>$value
+        if ($check) {
+            InsuranceClaimAnswer::where('id', $check->id)->update([
+                'answer' => $value
             ]);
         }
-
     }
 
-    public function updatedSelectedCustomers():void
+    public function updatedSelectedCustomers(): void
     {
         AdminHelper::rememberListPageFilter($this->selectedCustomers);
         $this->resetPage();
     }
 
-    public function updatedSelectedStatus():void
+    public function updatedSelectedStatus(): void
     {
         $this->resetPage();
     }
 
-    public function updatedSelectedClaimStatus():void
+    public function updatedSelectedClaimStatus(): void
     {
         $this->resetPage();
     }
 
-    public function resetClaimFilter():void
+    public function resetClaimFilter(): void
     {
         $this->claimFilter = ClaimHelper::getFilterKeys();
-        $this->dispatch('resetFilterMultiChoice',data:[]);
+        $this->dispatch('resetFilterMultiChoice', data: []);
     }
 
     public function updatedFilter(): void
     {
         $this->resetPage();
     }
-
 }

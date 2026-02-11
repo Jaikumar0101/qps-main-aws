@@ -182,6 +182,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ComponentServiceProvider::class,
         App\Providers\SettingServiceProvider::class,
+        App\Providers\BaseServiceProvider::class,
 
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
         //Intervention\Image\ImageServiceProvider::class,
@@ -249,7 +250,7 @@ return [
         //'Image' => Intervention\Image\Facades\Image::class,
         'Currency' => \Torann\Currency\Facades\Currency::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
@@ -260,6 +261,7 @@ return [
         'Role'=>\App\Helpers\Role\RoleHelper::class,
         'ClaimHelper'=>\App\Helpers\ClaimHelper::class,
         'FilterHelper'=>\App\Helpers\Claims\ClaimFilterHelper::class,
+        'InsuranceClaimPortal'=>\App\Facades\InsuranceClaimPortal::class,
     ],
 
 ];

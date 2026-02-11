@@ -125,7 +125,7 @@ if (! function_exists('get_date_by_format')) {
 
 if (! function_exists('display_date_format')) {
 
-    function display_date_format($time = null, $format = "m/d/Y", $fromFormat = "Y-m-d"): ?string
+    function display_date_format($time = null, $format = "m/d/Y", $fromFormat = "Y-m-d", $default = null): ?string
     {
         try
         {
@@ -135,7 +135,7 @@ if (! function_exists('display_date_format')) {
             }
         }
         catch (\Exception $exception) { }
-        return null;
+        return $default;
     }
 }
 

@@ -22,13 +22,6 @@
       0 => 'Barryvdh\\DomPDF\\ServiceProvider',
     ),
   ),
-  'binafy/laravel-user-monitoring' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Binafy\\LaravelUserMonitoring\\Providers\\LaravelUserMonitoringServiceProvider',
-    ),
-  ),
   'intervention/image' => 
   array (
     'aliases' => 
@@ -38,6 +31,13 @@
     'providers' => 
     array (
       0 => 'Intervention\\Image\\ImageServiceProvider',
+    ),
+  ),
+  'jaikumar0101/laravel-repo-facade-builder' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Jaikumar0101\\LaravelRepoFacadeBuilder\\LaravelRepoFacadeBuilderServiceProvider',
     ),
   ),
   'laravel/breeze' => 
@@ -213,17 +213,6 @@
     'providers' => 
     array (
       0 => 'Vinkla\\Hashids\\HashidsServiceProvider',
-    ),
-  ),
-  'weidner/goutte' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Weidner\\Goutte\\GoutteServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Goutte' => 'Weidner\\Goutte\\GoutteFacade',
     ),
   ),
   'wireui/wireui' => 

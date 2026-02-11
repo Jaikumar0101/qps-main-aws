@@ -425,7 +425,7 @@
                                 <x-admin.claims.table-header-element
                                     class=""
                                     element="created_at"
-                                    label="Merge Date"
+                                    label="Follow-up Date"
                                     currentOrder="{{ $filter['orderBy'] }}"
                                     currentSort="{{ $filter['sortBy'] }}"
                                 />
@@ -465,7 +465,7 @@
                             <!--begin::Table body-->
                             <tbody>
                             @forelse($data as $item)
-                                <tr class="{{  $item->trashed()?'bg-warning text-white':(in_array($item->follow_up_status,$closedStatus)?'bg-success text-white activeTag':'') }} fs-8 border-bottom border-dashed border-secondary"
+                                <tr class="{{ InsuranceClaimPortal::claimsTable()->getRowColor($item, $closedStatus) }} fs-8 border-bottom border-dashed border-secondary"
 
                                 >
                                     <td x-bind:class="editable?'p-0':'ps-2 pe-2'">
@@ -544,7 +544,7 @@
                                     </td>
                                     <td>
                                         <div x-bind:class="editable?'p-2':''">
-                                            {{ get_date_by_format($item->created_at,'m/d/Y') }}
+                                            {{ display_date_format($item->nxt_flup_dt,'m/d/Y') ??'' }}
                                         </div>
                                     </td>
                                     <td>

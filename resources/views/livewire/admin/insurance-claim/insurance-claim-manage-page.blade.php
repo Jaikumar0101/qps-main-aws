@@ -563,7 +563,7 @@
                                         </div>
                                     </td>
                                     @can('claim::assign')
-                                        <td class="nowrap">
+                                        <td style="overflow: visible; position: relative;">
                                             <x-admin.claims.team-row-tag
                                                 :claim="$item"
                                             />

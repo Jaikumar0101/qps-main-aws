@@ -13,10 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InsuranceClaim extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     const METHOD_TYPES = [
-        'call','portal','both'
+        'call',
+        'portal',
+        'both'
     ];
 
     protected $fillable = [
@@ -56,25 +58,25 @@ class InsuranceClaim extends Model
 
     public function code($prefix = "#")
     {
-        return $prefix."INC-".$this->id;
+        return $prefix . "INC-" . $this->id;
     }
 
-    public function customer():BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class,'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function assignedClients():HasMany
+    public function assignedClients(): HasMany
     {
-        return $this->hasMany(ClientAssign::class,'customer_id','customer_id');
+        return $this->hasMany(ClientAssign::class, 'customer_id', 'customer_id');
     }
 
-    public function assigns():HasMany
+    public function assigns(): HasMany
     {
-        return $this->hasMany(ClaimAssign::class,'claim_id','id');
+        return $this->hasMany(ClaimAssign::class, 'claim_id', 'id');
     }
 
-    public function users():HasManyThrough
+    public function users(): HasManyThrough
     {
         return $this->hasManyThrough(
             User::class,
@@ -86,45 +88,58 @@ class InsuranceClaim extends Model
         );
     }
 
-    public function claimStatusModal():BelongsTo
+    public function claimStatusModal(): BelongsTo
     {
-        return $this->belongsTo(InsuranceClaimStatus::class,'claim_status');
+        return $this->belongsTo(InsuranceClaimStatus::class, 'claim_status');
     }
 
-    public function eobDlModal():BelongsTo
+    public function eobDlModal(): BelongsTo
     {
-        return $this->belongsTo(InsuranceEobDl::class,'eob_dl');
+        return $this->belongsTo(InsuranceEobDl::class, 'eob_dl');
     }
 
-    public function teamModal():HasOne
+    public function teamModal(): HasOne
     {
-        return $this->hasOne(InsuranceWorkedBy::class, 'id','team_worked');
+        return $this->hasOne(InsuranceWorkedBy::class, 'id', 'team_worked');
     }
 
-    public function taskModal():HasOne
+    public function taskModal(): HasOne
     {
-        return $this->hasOne(InsuranceClaimTask::class, 'id','task_id');
+        return $this->hasOne(InsuranceClaimTask::class, 'id', 'task_id');
     }
 
-    public function followUpModal():BelongsTo
+    public function followUpModal(): BelongsTo
     {
-        return $this->belongsTo(InsuranceFollowUp::class,'follow_up_status');
+        return $this->belongsTo(InsuranceFollowUp::class, 'follow_up_status');
     }
 
-    public function answers():HasMany
+    public function answers(): HasMany
     {
-       return $this->hasMany(InsuranceClaimAnswer::class,'claim_id','id');
+        return $this->hasMany(InsuranceClaimAnswer::class, 'claim_id', 'id');
     }
 
 
-    public function userNotes():HasMany
+    public function userNotes(): HasMany
     {
-        return $this->hasMany(UserNote::class,'claim_id','id');
+        return $this->hasMany(UserNote::class, 'claim_id', 'id');
     }
 
     public function isClosed(): bool
     {
-        return in_array($this->followUpModal?->name ??'',ClaimHelper::closedFollowUp());
+        return in_array($this->followUpModal?->name ?? '', ClaimHelper::closedFollowUp());
     }
 
+    public function followDaysRemaining()
+    {
+        $date = $this->nxt_flup_dt;
+
+        if (empty($date)) {
+            return 365;
+        }
+
+        $now = now();
+        $followUpDate = \Carbon\Carbon::parse($date);
+
+        return $now->diffInDays($followUpDate, false);
+    }
 }

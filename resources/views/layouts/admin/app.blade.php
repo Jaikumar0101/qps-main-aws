@@ -68,6 +68,10 @@
         .custom-link-hover:hover{
             color: var(--bg-site-blue);
         }
+
+        .bg-orange{
+            background-color: #FFA500;
+        }
     </style>
 
 </head>

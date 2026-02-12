@@ -10,19 +10,19 @@ class ClaimTableRepository implements ClaimTableRepositoryInterface
     public function getRowColor(InsuranceClaim $insuranceClaim, array $closedStatus = [])
     {
         if ($insuranceClaim->trashed()) {
-            return 'bg-light-primary text-dark';
+            return 'bg-table-primary text-dark';
         }
 
         if (in_array($insuranceClaim->id, $closedStatus)) {
-            return 'bg-success text-white activeTag';
+            return 'bg-table-success text-white ';
         }
 
         $days = $insuranceClaim->followDaysRemaining();
 
         return match (true) {
-            $days < 0    => 'bg-danger text-white activeTag', // Any date in the past
-            $days === 0  => 'bg-orange text-white activeTag', // Due today
-            $days <= 2   => 'bg-warning text-dark activeTag', // 1 or 2 days remaining
+            $days < 0    => 'bg-table-danger text-dark ', // Any date in the past
+            $days === 0  => 'bg-table-orange text-dark ', // Due today
+            $days <= 2   => 'bg-table-warning text-dark ', // 1 or 2 days remaining
             default      => '',                               // 3 or more days / no date
         };
     }

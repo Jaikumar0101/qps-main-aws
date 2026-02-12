@@ -693,29 +693,45 @@
                                     x-bind:class="editable?'mk-table-th-p-2':''"
                                 >
                                     <td></td>
-                                    <th>
-                                        Sent on:
-                                    </th>
-                                    <td>
-                                        {{ display_date_format($item->sent ??null) ??''}}
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Sent on:</span>
+                                            <div>
+                                                {{ display_date_format($item->sent ??null) ??''}}
+                                            </div>
+                                        </div>
                                     </td>
-                                    <th>No of Days:</th>
-                                    <td>
-                                        {{ $item->days ??'' }}
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">No of Days:</span>
+                                            <div>
+                                                {{ $item->days ??'' }}
+                                            </div>
+                                        </div>
                                     </td>
-                                    <th>Days - R:</th>
-                                    <td>
-                                        {{ $item->days_r ??'' }}
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Days - R:</span>
+                                            <div>
+                                                {{ $item->days_r ??'' }}
+                                            </div>
+                                        </div>
                                     </td>
-                                    <th>
-                                        Prov-Name:
-                                    </th>
-                                    <td>
-                                        {{$item->prov_nm ??''}}
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Prov-Name:</span>
+                                            <div>
+                                                {{$item->prov_nm ??''}}
+                                            </div>
+                                        </div>
                                     </td>
-                                    <th>Location:</th>
-                                    <td colspan="4">
-                                        {{$item->location ??''}}
+                                    <td colspan="5">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Location:</span>
+                                            <div>
+                                                {{$item->location ??''}}
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <!-- Base Row Ends -->
@@ -726,25 +742,23 @@
                                     x-bind:class="editable?'mk-table-th-only-p-2':''"
                                 >
                                     <td></td>
-                                    <th>
-                                        Claim Status:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->claimStatusModal?->name ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.claim_status"
-                                                    x-on:change="claimStatusUpdated"
-                                            >
-                                                <option value="">Select</option>
-                                                @foreach($claimStatusList as $status)
-                                                    <option value="{{ $status->id }}">{{ $status->name ??'' }}</option>
-                                                @endforeach
-                                            </select>
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Claim Status:</span>
+                                            <div x-show="!editable">
+                                                {{$item->claimStatusModal?->name ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.claim_status"
+                                                        x-on:change="claimStatusUpdated"
+                                                >
+                                                    <option value="">Select</option>
+                                                    @foreach($claimStatusList as $status)
+                                                        <option value="{{ $status->id }}">{{ $status->name ??'' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
                                     <th>
@@ -774,18 +788,18 @@
                                     >
                                         <td></td>
                                         @foreach($item->answers as $qi=>$row)
-                                            <th class="text-danger">
-                                                {{ $row->question ??'' }}
-                                            </th>
-                                            <td>
-                                                <div x-show="!editable">
-                                                    {{ $row->answer ??'' }}
-                                                </div>
-                                                <div x-show="editable">
-                                                    <input type="text"
-                                                           x-model="model.a_{{$qi + 1}}"
-                                                           class="fs-8 h-100 w-100"
-                                                    >
+                                            <td colspan="2">
+                                                <div class="d-flex gap-2">
+                                                    <span class="fw-bold text-danger">{{ $row->question ??'' }}</span>
+                                                    <div x-show="!editable">
+                                                        {{ $row->answer ??'' }}
+                                                    </div>
+                                                    <div x-show="editable">
+                                                        <input type="text"
+                                                               x-model="model.a_{{$qi + 1}}"
+                                                               class="fs-8 h-100 w-100"
+                                                        >
+                                                    </div>
                                                 </div>
                                             </td>
                                         @endforeach
@@ -794,132 +808,67 @@
                                 @endif
                                 <!-- Question & Answers Row Ends -->
 
-                                <!-- Additional Notes & Follow--Up Row -->
+                                <!-- Follow-Up Row -->
                                 <tr class="fs-8 border-bottom border-dashed border-secondary edit-row"
                                     x-show="showRow == '{{ $item->id }}'"
                                     x-bind:class="editable?'mk-table-th-only-p-2':''"
                                 >
                                     <td></td>
-                                    <th>
-                                         Additional Notes:
-                                    </th>
-                                    <td colspan="5">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->note ??''}}
-                                            @foreach($item->userNotes as $noteItem)
-                                                <br>{{ $noteItem->note ??'' }}&nbsp;&nbsp; ( {{ $noteItem->user?->fullName() ??'--' }}  {{ get_date_by_format($noteItem->created_at,'m/d/Y - H:i') }} )
-                                            @endforeach
-                                        </div>
-                                        <div x-show="editable" class="mb-2">
-                                            <textarea class="fs-8 w-100 h-100"
-                                                      x-model="model.note"
-                                            ></textarea>
-                                            @if($editModal && $editModal->id == $item->id)
-                                                @foreach($notes as $nIndex=>$noteItem)
-                                                    <div class="row my-2 gy-2 gx-2">
-                                                        @if(Arr::has($noteItem,'id'))
-                                                            <div class="col-7">
-                                                                {{ \App\Models\User::displayUserName($noteItem['user_id']) }}
-                                                            </div>
-                                                            <div class="col-5">
-                                                                {{ get_date_by_format($noteItem['created_at'] ??null,'m/d/Y - H:i') }}
-                                                            </div>
-                                                        @else
-                                                            <div class="col-7">
-                                                                {{ $adminUser->fullName() }}
-                                                            </div>
-                                                            <div class="col-5">
-                                                                --
-                                                            </div>
-                                                        @endif
-                                                        <div class="col-10">
-                                                        <textarea class="fs-8 w-100 h-100"
-                                                                  wire:model="notes.{{ $nIndex }}.note"
-                                                        ></textarea>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <x-admin.theme.button icon="fa fa-trash"
-                                                                                  color="danger"
-                                                                                  class="btn-icon btn-sm rounded-pill"
-                                                                                  wire:click.prevent="removeClaimNote({{ $nIndex }})"
-                                                                                  wire:loading.attr="disabled"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                            <x-admin.theme.button label="Add"
-                                                                  icon="fa fa-add"
-                                                                  color="success"
-                                                                  class="btn-sm p-0 px-2 py-1"
-                                                                  wire:click.prevent="addNewClaimNote"
-                                                                  wire:loading.attr="disabled"
-                                            />
-                                        </div>
-                                    </td>
-                                    <th>
-                                        Followup Status:
-                                    </th>
                                     <td colspan="2">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->followUpModal?->name ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.follow_up_status"
-                                            >
-                                                <option value="">Select</option>
-                                                @foreach($followList as $row)
-                                                    <option value="{{ $row->id }}">{{ $row->name ??'' }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <th>
-                                        PMS Note:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->pms_note ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.pms_note"
-                                            >
-                                                <option value="">Select</option>
-                                                <option value="Yes">Yes</option>
-                                                <option value="No">No</option>
-                                            </select>
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Followup Status:</span>
+                                            <div x-show="!editable">
+                                                {{$item->followUpModal?->name ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.follow_up_status"
+                                                >
+                                                    <option value="">Select</option>
+                                                    @foreach($followList as $row)
+                                                        <option value="{{ $row->id }}">{{ $row->name ??'' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
-                                    <th>
-                                        Method:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{ ucfirst($item->method ??'') }}
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">PMS Note:</span>
+                                            <div x-show="!editable">
+                                                {{$item->pms_note ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.pms_note"
+                                                >
+                                                    <option value="">Select</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.method"
-                                            >
-                                                <option value="">Select</option>
-                                                <option value="call">Call</option>
-                                                <option value="portal">Portal</option>
-                                                <option value="both">Both</option>
-                                            </select>
+                                    </td>
+                                    <td colspan="9">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Method:</span>
+                                            <div x-show="!editable">
+                                                {{ ucfirst($item->method ??'') }}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.method"
+                                                >
+                                                    <option value="">Select</option>
+                                                    <option value="call">Call</option>
+                                                    <option value="portal">Portal</option>
+                                                    <option value="both">Both</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <!-- Additional Notes & Follow--Up Row Ends -->
+                                <!-- Follow-Up Row Ends -->
 
                                 <!-- Final Row -->
                                 <tr class="fs-8 border-bottom border-dashed border-secondary edit-row"
@@ -927,93 +876,82 @@
                                     x-bind:class="editable?'mk-table-th-only-p-2':''"
                                 >
                                     <td></td>
-                                    <th>
-                                        Claim on File:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->cof ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.cof"
-                                            >
-                                                <option value="">Select</option>
-                                                <option value="Yes">Yes</option>
-                                                <option value="No">No</option>
-                                            </select>
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Claim on File:</span>
+                                            <div x-show="!editable">
+                                                {{$item->cof ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.cof"
+                                                >
+                                                    <option value="">Select</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
-                                    <th>
-                                        Next/Followup Date:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{ display_date_format($item->nxt_flup_dt ??null) ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <input type="date"
-                                                   class="fs-8"
-                                                   x-model="model.nxt_flup_dt"
-                                            />
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Next/Followup Date:</span>
+                                            <div x-show="!editable">
+                                                {{ display_date_format($item->nxt_flup_dt ??null) ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <input type="date"
+                                                       class="fs-8"
+                                                       x-model="model.nxt_flup_dt"
+                                                />
+                                            </div>
                                         </div>
                                     </td>
-                                    <th>
-                                        EOB Downloaded:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->eobDlModal?->name ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <select class="fs-8"
-                                                    x-model="model.eob_dl"
-                                            >
-                                                <option value="">Select</option>
-                                                @foreach($eobList as $row)
-                                                    <option value="{{ $row->id }}">{{ $row->name ??'' }}</option>
-                                                @endforeach
-                                            </select>
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">EOB Downloaded:</span>
+                                            <div x-show="!editable">
+                                                {{$item->eobDlModal?->name ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <select class="fs-8"
+                                                        x-model="model.eob_dl"
+                                                >
+                                                    <option value="">Select</option>
+                                                    @foreach($eobList as $row)
+                                                        <option value="{{ $row->id }}">{{ $row->name ??'' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
-                                    <th>
-                                        Worked By:
-                                    </th>
-                                    <td>
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->worked_by ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <input type="text"
-                                                   x-model="model.worked_by"
-                                                   class="fs-8 w-100"
-                                            />
+                                    <td colspan="2">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Worked By:</span>
+                                            <div x-show="!editable">
+                                                {{$item->worked_by ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <input type="text"
+                                                       x-model="model.worked_by"
+                                                       class="fs-8 w-100"
+                                                />
+                                            </div>
                                         </div>
                                     </td>
-                                    <th>
-                                        Worked Date:
-                                    </th>
-                                    <td colspan="4">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-
-                                            {{ display_date_format($item->worked_dt ??null) ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <input type="date"
-                                                   class="fs-8"
-                                                   x-model="model.worked_dt"
-                                                   x-on:change="updateClaimPMS()"
-                                            />
+                                    <td colspan="5">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Worked Date:</span>
+                                            <div x-show="!editable">
+                                                {{ display_date_format($item->worked_dt ??null) ??''}}
+                                            </div>
+                                            <div x-show="editable">
+                                                <input type="date"
+                                                       class="fs-8"
+                                                       x-model="model.worked_dt"
+                                                       x-on:change="updateClaimPMS()"
+                                                />
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -1025,53 +963,113 @@
                                     x-bind:class="editable?'mk-table-th-only-p-2':''"
                                 >
                                     <td></td>
-                                    <th>
-                                        Task Subject
-                                    </th>
-                                    <td colspan="3">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->task_subject ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <textarea class="fs-8 w-100"
-                                                      x-model="model.task_subject"
-                                            ></textarea>
-                                        </div>
-                                    </td>
-                                    <th>
-                                        Task Detail
-                                    </th>
-                                    <td colspan="2">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->task_note ??''}}
-                                        </div>
-                                        <div x-show="editable">
-                                            <textarea class="fs-8 w-100"
-                                                     x-model="model.task_note"
-                                            ></textarea>
-                                        </div>
-                                    </td>
-                                    <th colspan="2">
-                                        What we need from you/Reason
-                                    </th>
                                     <td colspan="4">
-                                        <div x-show="!editable"
-                                             x-bind:class="editable?'p-2':''"
-                                        >
-                                            {{$item->task_reason ??''}}
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Task Subject</span>
+                                            <div x-show="!editable" class="flex-fill">
+                                                {{$item->task_subject ??''}}
+                                            </div>
+                                            <div x-show="editable" class="flex-fill">
+                                                <textarea class="fs-8 w-100"
+                                                          x-model="model.task_subject"
+                                                ></textarea>
+                                            </div>
                                         </div>
-                                        <div x-show="editable">
-                                            <textarea class="fs-8 w-100"
-                                                     x-model="model.task_reason"
-                                            ></textarea>
+                                    </td>
+                                    <td colspan="3">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Task Detail</span>
+                                            <div x-show="!editable" class="flex-fill">
+                                                {{$item->task_note ??''}}
+                                            </div>
+                                            <div x-show="editable" class="flex-fill">
+                                                <textarea class="fs-8 w-100"
+                                                         x-model="model.task_note"
+                                                ></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td colspan="6">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">What we need from you/Reason</span>
+                                            <div x-show="!editable" class="flex-fill">
+                                                {{$item->task_reason ??''}}
+                                            </div>
+                                            <div x-show="editable" class="flex-fill">
+                                                <textarea class="fs-8 w-100"
+                                                         x-model="model.task_reason"
+                                                ></textarea>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <!-- Task Row Ends -->
+
+                                <!-- Additional Notes Row -->
+                                <tr class="fs-8 border-bottom border-dashed border-secondary edit-row"
+                                    x-show="showRow == '{{ $item->id }}'"
+                                    x-bind:class="editable?'mk-table-th-only-p-2':''"
+                                >
+                                    <td></td>
+                                    <td colspan="13">
+                                        <div class="d-flex gap-2">
+                                            <span class="fw-bold">Additional Notes:</span>
+                                            <div x-show="!editable" class="flex-fill">
+                                                {{$item->note ??''}}
+                                                @foreach($item->userNotes as $noteItem)
+                                                    <br>{{ $noteItem->note ??'' }}&nbsp;&nbsp; ( {{ $noteItem->user?->fullName() ??'--' }}  {{ get_date_by_format($noteItem->created_at,'m/d/Y - H:i') }} )
+                                                @endforeach
+                                            </div>
+                                            <div x-show="editable" class="mb-2 flex-fill">
+                                                <textarea class="fs-8 w-100 h-100"
+                                                          x-model="model.note"
+                                                ></textarea>
+                                                @if($editModal && $editModal->id == $item->id)
+                                                    @foreach($notes as $nIndex=>$noteItem)
+                                                        <div class="row my-2 gy-2 gx-2">
+                                                            @if(Arr::has($noteItem,'id'))
+                                                                <div class="col-7">
+                                                                    {{ \App\Models\User::displayUserName($noteItem['user_id']) }}
+                                                                </div>
+                                                                <div class="col-5">
+                                                                    {{ get_date_by_format($noteItem['created_at'] ??null,'m/d/Y - H:i') }}
+                                                                </div>
+                                                            @else
+                                                                <div class="col-7">
+                                                                    {{ $adminUser->fullName() }}
+                                                                </div>
+                                                                <div class="col-5">
+                                                                    --
+                                                                </div>
+                                                            @endif
+                                                            <div class="col-10">
+                                                            <textarea class="fs-8 w-100 h-100"
+                                                                      wire:model="notes.{{ $nIndex }}.note"
+                                                            ></textarea>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <x-admin.theme.button icon="fa fa-trash"
+                                                                                      color="danger"
+                                                                                      class="btn-icon btn-sm rounded-pill"
+                                                                                      wire:click.prevent="removeClaimNote({{ $nIndex }})"
+                                                                                      wire:loading.attr="disabled"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                                <x-admin.theme.button label="Add"
+                                                                      icon="fa fa-add"
+                                                                      color="success"
+                                                                      class="btn-sm p-0 px-2 py-1"
+                                                                      wire:click.prevent="addNewClaimNote"
+                                                                      wire:loading.attr="disabled"
+                                                />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Additional Notes Row Ends -->
 
                                 <!-- Action Row -->
                                 <tr class="fs-8 edit-row"
@@ -1177,8 +1175,16 @@
     .mk-table-th-only-p-2 th{
         padding:.5rem!important;
     }
+    .mk-table-th-only-p-2 td{
+        padding-left: .5rem!important;
+        padding-right: .5rem!important;
+    }
     .edit-row{
         background-color: #DCDCDC!important;
+    }
+    .edit-row td{
+        padding-left: .35rem!important;
+        padding-right: .35rem!important;
     }
 </style>
 @endassets

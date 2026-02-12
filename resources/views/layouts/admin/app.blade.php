@@ -69,9 +69,12 @@
             color: var(--bg-site-blue);
         }
 
-        .bg-orange{
-            background-color: #FFA500;
-        }
+        /* Table Row Backgrounds - 50% Intensity */
+        .bg-table-primary { background-color: rgba(13, 110, 253, 0.65) !important; } /* Blue */
+        .bg-table-success { background-color: rgba(25, 135, 84, 0.65) !important; }  /* Green */
+        .bg-table-danger  { background-color: rgba(220, 53, 69, 0.65) !important; }  /* Red */
+        .bg-table-orange  { background-color: rgba(255, 165, 0, 0.65) !important; }   /* Orange */
+        .bg-table-warning { background-color: rgba(255, 193, 7, 0.65) !important; }   /* Yellow */
     </style>
 
 </head>
